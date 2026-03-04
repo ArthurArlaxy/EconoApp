@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Expense" ALTER COLUMN "description" DROP NOT NULL;
+
+-- AlterTable
+ALTER TABLE "User" ALTER COLUMN "updatedAt" SET DEFAULT CURRENT_TIMESTAMP;

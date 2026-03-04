@@ -6,11 +6,11 @@
 
 generator client {
   provider = "prisma-client-js"
-  output = "../node_modules/.prisma/client"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -19,7 +19,7 @@ model User {
   email     String   @unique
   password  String
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @updatedAt @default(now())
 
   expenses Expense[]
   categories Category[] 
@@ -31,7 +31,7 @@ model Expense {
   value        Decimal @db.Decimal(10,2)
   dueDate      DateTime
   updatedAt DateTime @updatedAt
-  description  String
+  description  String?
   isPaid       Boolean @default(false)
   isRecurring  Boolean @default(false)
   installments Int?
