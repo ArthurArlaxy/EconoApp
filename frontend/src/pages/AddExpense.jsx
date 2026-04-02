@@ -40,10 +40,14 @@ export function AddExpense(){
                     <input type="date" id="dueDate" required value={dueDate} onChange={(ev) => setDueDate(ev.target.value)} />
                 </div>
                 <div>
-                    <label htmlFor="category">Due Date</label>
+                    <label htmlFor="category">Category</label>
                     <select  id="category" required value={category} onChange={(ev) => setCategory(ev.target.value)} >
                         <option value="" disabled>Choose category</option>
                     </select>
+                </div>
+                <div>
+                    <label htmlFor="isRecurring">Is Recurring</label>
+                    <input type="checkbox" value={isRecurring} onChange={(ev) => setIsRecurring(ev.target.value)} />
                 </div>
             </form>
         </>
