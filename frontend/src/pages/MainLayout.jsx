@@ -4,7 +4,7 @@ export function MainLayout(){
     return(
         <>
             <headers>
-                <h2>Arthur Expense Menager💸</h2>
+                <h1>Arthur Expense Menager💸</h1>
                 <nav>
                     <NavLink>Dashboard</NavLink>
                     <NavLink>Search</NavLink>
@@ -13,6 +13,9 @@ export function MainLayout(){
                 </nav>
                 <Outlet/>
             </headers>
+            <footer>
+                Created By Arthur Albuquerque😎
+            </footer>
         </>
     )
 }
