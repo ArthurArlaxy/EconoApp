@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import "../index.css"
 
 export function AddExpense(){
@@ -11,6 +11,8 @@ export function AddExpense(){
     const [isRecurring, setIsRecurring] = useState(false)
     const [isPaid, setIsPaid] = useState(false)
     const [installments, setInstallments] = useState("")
+
+    useEffect()
 
     const handleSubmit = (ev) => {
         ev.preventDefault()
@@ -45,6 +47,7 @@ export function AddExpense(){
                         <label htmlFor="category">Category</label>
                         <select  id="category" required value={category} onChange={(ev) => setCategory(ev.target.value)} >
                             <option value="" disabled>Choose category</option>
+                            
                         </select>
                     </div>
                     <div className="inputs">
