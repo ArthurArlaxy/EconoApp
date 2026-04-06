@@ -8,6 +8,26 @@ export class ExpenseService {
   async createExpense(data: CreateExpenseInput) {
     const baseDate = new Date(data.dueDate)
 
+    // 🎯 RECORRENTE
+    if (data.isRecurring) {
+      const monthsToGenerate = 12
+      const expensesToCreate = []
+      let currentDate = baseDate
+
+      for (let i = 0; i < monthsToGenerate; i++) {
+        expensesToCreate.push({
+          ...data,
+          dueDate: currentDate,
+          installments: 0
+        })
+
+        currentDate = addOneMonthSafe(currentDate)
+      }
+
+      return await this.expenseRepository.createMany(expensesToCreate)
+    }
+
+    // 🎯 PARCELADO
     if (data.installments) {
       const expensesToCreate = []
       let currentDate = baseDate
@@ -24,6 +44,7 @@ export class ExpenseService {
       return await this.expenseRepository.createMany(expensesToCreate)
     }
 
+    // 🎯 SIMPLES
     return await this.expenseRepository.create({
       ...data,
       dueDate: baseDate

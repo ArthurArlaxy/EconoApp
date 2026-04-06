@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
+import { getCategories } from "../Service/ExpenseService"
 import "../index.css"
 
-export function AddExpense(){
+export function AddExpense() {
 
     const [value, setValue] = useState("")
     const [name, setName] = useState("")
@@ -11,8 +12,20 @@ export function AddExpense(){
     const [isRecurring, setIsRecurring] = useState(false)
     const [isPaid, setIsPaid] = useState(false)
     const [installments, setInstallments] = useState("")
+    const [categories, setCategories] = useState([])
 
-    useEffect()
+    useEffect(() => {
+        async function loadCategories() {
+            try {
+                const data = await getCategories(userId)
+                setCategories(data)
+            } catch (error) {
+                console.error("Erro ao carregar categorias", error)
+            }
+        }
+
+        loadCategories()
+    }, [])
 
     const handleSubmit = (ev) => {
         ev.preventDefault()
@@ -26,14 +39,14 @@ export function AddExpense(){
         setInstallments("")
     }
 
-    return(
+    return (
         <>
             <h2>New Expense</h2>
             <form onSubmit={handleSubmit}>
                 <section className="inputsContainers">
                     <div className="inputs">
                         <label htmlFor="value">Value</label>
-                        <input type="number" id="value" required value={value} onChange={(ev) => setValue(ev.target.value)}/>
+                        <input type="number" id="value" required value={value} onChange={(ev) => setValue(ev.target.value)} />
                     </div>
                     <div className="inputs">
                         <label htmlFor="name">Name</label>
@@ -45,18 +58,18 @@ export function AddExpense(){
                     </div>
                     <div className="inputs">
                         <label htmlFor="category">Category</label>
-                        <select  id="category" required value={category} onChange={(ev) => setCategory(ev.target.value)} >
+                        <select id="category" required value={category} onChange={(ev) => setCategory(ev.target.value)} >
                             <option value="" disabled>Choose category</option>
-                            
+                            {categories.map}
                         </select>
                     </div>
                     <div className="inputs">
                         <label htmlFor="isRecurring">Is Recurring</label>
-                        <input type="checkbox" id="isRecurring"  value={isRecurring} onChange={(ev) => setIsRecurring(ev.target.value)} />
+                        <input type="checkbox" id="isRecurring" value={isRecurring} onChange={(ev) => setIsRecurring(ev.target.value)} />
                     </div>
                     <div className="inputs">
                         <label htmlFor="isPaid">Is Paid</label>
-                        <input type="checkbox" value={isPaid} id="isPaid" onChange={(ev)=> setIsPaid(ev.target.value)}/>
+                        <input type="checkbox" value={isPaid} id="isPaid" onChange={(ev) => setIsPaid(ev.target.value)} />
                     </div>
                     <div className="inputs">
                         <label htmlFor="installments">Installmens</label>
@@ -69,7 +82,7 @@ export function AddExpense(){
                 </div>
                 <button className="btnPrincipal" type="submit">Adicionar</button>
             </form>
-            
+
         </>
     )
 }

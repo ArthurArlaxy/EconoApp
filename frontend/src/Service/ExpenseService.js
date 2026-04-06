@@ -7,12 +7,14 @@ export function AddExpenseService() {
 
 }
 
-export async function GetCategories(userId) {
+export async function getCategories(userId) {
     try {
 
         const response = await fetch(`${API_URL}/categories/${userId}`,{
             "method": "GET",
-            "Content-Type": "application/json"
+            headers:{
+                "Content-Type": "application/json"
+            }
         })
 
         if (!response.ok) {
