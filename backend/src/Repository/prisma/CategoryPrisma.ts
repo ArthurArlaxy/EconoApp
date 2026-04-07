@@ -19,7 +19,10 @@ export class CategoryPrismaRepository implements CategoryRepository {
 
   async findByUserId(userId: number): Promise<Category[]> {
     return await this.prisma.category.findMany({
-      where: { userId: userId },
+      where: { OR: [
+        {userId},
+        {userId: 0}
+      ] },
     });
   }
 

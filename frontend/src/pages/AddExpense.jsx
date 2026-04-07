@@ -17,7 +17,7 @@ export function AddExpense() {
     useEffect(() => {
         async function loadCategories() {
             try {
-                const data = await getCategories(userId)
+                let data = await getCategories(1)
                 setCategories(data)
             } catch (error) {
                 console.error("Erro ao carregar categorias", error)
@@ -60,16 +60,20 @@ export function AddExpense() {
                         <label htmlFor="category">Category</label>
                         <select id="category" required value={category} onChange={(ev) => setCategory(ev.target.value)} >
                             <option value="" disabled>Choose category</option>
-                            {categories.map}
+                            {categories.map((cat) => (
+                                <option key={cat.id} value={cat.id}>
+                                    {cat.name}
+                                </option>
+                            ))}
                         </select>
                     </div>
                     <div className="inputs">
                         <label htmlFor="isRecurring">Is Recurring</label>
-                        <input type="checkbox" id="isRecurring" value={isRecurring} onChange={(ev) => setIsRecurring(ev.target.value)} />
+                        <input type="checkbox" id="isRecurring" value={isRecurring} onChange={(ev) => setIsRecurring(ev.target.checked)} />
                     </div>
                     <div className="inputs">
                         <label htmlFor="isPaid">Is Paid</label>
-                        <input type="checkbox" value={isPaid} id="isPaid" onChange={(ev) => setIsPaid(ev.target.value)} />
+                        <input type="checkbox" value={isPaid} id="isPaid" onChange={(ev) => setIsPaid(ev.target.checked)} />
                     </div>
                     <div className="inputs">
                         <label htmlFor="installments">Installmens</label>

@@ -1,6 +1,4 @@
-import "dotenv/config";
-
-const API_URL = process.env.API_URL
+const API_URL = "http://localhost:3000/api"
 
 
 export function AddExpenseService() {
@@ -10,8 +8,8 @@ export function AddExpenseService() {
 export async function getCategories(userId) {
     try {
 
-        const response = await fetch(`${API_URL}/categories/${userId}`,{
-            "method": "GET",
+        const response = await fetch(`${API_URL}/categories/user/${userId}`,{
+            method: "GET",
             headers:{
                 "Content-Type": "application/json"
             }
@@ -22,6 +20,7 @@ export async function getCategories(userId) {
         }
 
         const data = await response.json();
+        console.log(data)
         return data;
 
 

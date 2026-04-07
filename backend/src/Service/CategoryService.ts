@@ -1,10 +1,21 @@
+import { HttpError } from "../Error/HttpError";
 import { CategoryRepository } from "../Repository/CategoryRepository";
 import { CreateCategoryInput, UpdateCategoryInput } from "../Schema/CategorySchema";
 
 export class CategoryService {
-  constructor(private categoryRepository: CategoryRepository) {}
+  constructor(private categoryRepository: CategoryRepository) { }
 
   async createCategory(data: CreateCategoryInput) {
+
+    const existentsCategories = await this.getCategoriesByUserId(data.userId)
+    const alreadyExists = existentsCategories.some((cat) => {
+      return cat.name.toLowerCase().trim() === data.name.toLowerCase().trim()
+    })
+
+    if (alreadyExists) {
+      throw new HttpError("Categoria já existe", 400);
+    }
+
     return await this.categoryRepository.create(data);
   }
 
