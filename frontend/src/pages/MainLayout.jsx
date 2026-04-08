@@ -7,7 +7,7 @@ export function MainLayout(){
                 <header>
                     <h1>Expense Menager💸</h1>
                     <nav>
-                        <NavLink  className="navBar">Dashboard</NavLink>
+                        <NavLink className="navBar">Dashboard</NavLink>
                         <NavLink className="navBar">Search</NavLink>
                         <NavLink className="navBar">Settings</NavLink>
                         <NavLink className="navBar">View</NavLink>

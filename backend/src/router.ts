@@ -25,10 +25,14 @@ const userController = new UserController(userService);
 const expenseController = new ExpenseController(expenseService);
 const categoryController = new CategoryController(categoryService);
 
+// Login Routes
+router.post("/register", userController.register)
+
 // User Routes
-router.post("/users", userController.createUser);
+router.post("/register", userController.register);
+router.get("/login", userController.login);
 router.get("/users", userController.getAllUsers);
-router.get("/users/:id", userController.getUser);
+router.get("/users/:id", userController.getUserById);
 router.put("/users/:id", userController.updateUser);
 router.delete("/users/:id", userController.deleteUser);
 

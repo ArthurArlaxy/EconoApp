@@ -1,13 +1,19 @@
 import { PrismaClient, User } from "@prisma/client";
 import { UserRepository } from "../UserRepository";
-import { CreateUserInput, UpdateUserInput } from "../../Schema/UserSchema";
+import { CreateUserInput, SafeUserReturn, UpdateUserInput } from "../../Schema/UserSchema";
+
 
 export class UserPrismaRepository implements UserRepository {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient) { }
 
-  async create(data: CreateUserInput): Promise<User> {
+  async create(data: CreateUserInput): Promise<SafeUserReturn> {
     return await this.prisma.user.create({
       data,
+      select: {
+        id: true,
+        email: true,
+        name: true
+      }
     });
   }
 
@@ -23,20 +29,36 @@ export class UserPrismaRepository implements UserRepository {
     });
   }
 
-  async findAll(): Promise<User[]> {
-    return await this.prisma.user.findMany();
-  }
-
-  async update(id: number, data: UpdateUserInput): Promise<User> {
-    return await this.prisma.user.update({
-      where: { id },
-      data,
+  async findAll(): Promise<SafeUserReturn[]> {
+    return await this.prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        name: true
+      }
     });
   }
 
-  async delete(id: number): Promise<User> {
+  async update(id: number, data: UpdateUserInput): Promise<SafeUserReturn> {
+    return await this.prisma.user.update({
+      where: { id },
+      data,
+      select: {
+        id: true,
+        email: true,
+        name: true
+      }
+    });
+  }
+
+  async delete(id: number): Promise<SafeUserReturn> {
     return await this.prisma.user.delete({
       where: { id },
+      select: {
+        id: true,
+        email: true,
+        name: true
+      }
     });
   }
 }

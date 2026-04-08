@@ -1,11 +1,11 @@
 import { Handler } from "express";
 import { UserService } from "../Service/UserService";
-import { createUserSchema, updateUserSchema } from "../Schema/UserSchema";
+import { createUserSchema, loginUserSchema, updateUserSchema } from "../Schema/UserSchema";
 
 export class UserController {
   constructor(private userService: UserService) {}
 
-  createUser: Handler = async (req, res, next) => {
+  register: Handler = async (req, res, next) => {
     try {
       const data = createUserSchema.parse(req.body);
       const user = await this.userService.createUser(data);
@@ -15,7 +15,20 @@ export class UserController {
     }
   };
 
-  getUser: Handler = async (req, res, next) => {
+  login: Handler = async (req, res, next) =>{
+    try {
+      
+      const data = loginUserSchema.parse(req.body)
+      const user = await this.userService.login(data)
+
+      res.status(200).json(user)
+
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  getUserById: Handler = async (req, res, next) => {
     try {
       const id = Number(req.params.id);
       const user = await this.userService.getUserById(id);
