@@ -7,7 +7,7 @@ export class CategoryPrismaRepository implements CategoryRepository {
 
   async create(data: CreateCategoryInput): Promise<Category> {
     return await this.prisma.category.create({
-      data,
+      data
     });
   }
 

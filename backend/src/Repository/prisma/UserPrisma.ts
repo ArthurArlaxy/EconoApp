@@ -12,7 +12,8 @@ export class UserPrismaRepository implements UserRepository {
       select: {
         id: true,
         email: true,
-        name: true
+        name: true,
+        role: true
       }
     });
   }
@@ -34,7 +35,8 @@ export class UserPrismaRepository implements UserRepository {
       select: {
         id: true,
         email: true,
-        name: true
+        name: true,
+        role:true
       }
     });
   }
@@ -46,7 +48,8 @@ export class UserPrismaRepository implements UserRepository {
       select: {
         id: true,
         email: true,
-        name: true
+        name: true,
+        role:true
       }
     });
   }
@@ -57,7 +60,8 @@ export class UserPrismaRepository implements UserRepository {
       select: {
         id: true,
         email: true,
-        name: true
+        name: true,
+        role:true
       }
     });
   }

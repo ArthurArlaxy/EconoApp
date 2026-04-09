@@ -9,8 +9,12 @@ import { CategoryService } from "./Service/CategoryService";
 import { UserPrismaRepository } from "./Repository/prisma/UserPrisma";
 import { ExpensePrismaRepository } from "./Repository/prisma/ExpensePrisma";
 import { CategoryPrismaRepository } from "./Repository/prisma/CategoryPrisma";
+import { AuthMiddleware } from "./middleware/AuthMiddleware";
 
 export const router = Router();
+
+//Authenrication instances
+const authMiddleware = new AuthMiddleware()
 
 // Dependency Injection
 const userRepository = new UserPrismaRepository(prisma);
@@ -26,28 +30,27 @@ const expenseController = new ExpenseController(expenseService);
 const categoryController = new CategoryController(categoryService);
 
 // Login Routes
-router.post("/register", userController.register)
-
-// User Routes
 router.post("/register", userController.register);
 router.get("/login", userController.login);
-router.get("/users", userController.getAllUsers);
-router.get("/users/:id", userController.getUserById);
-router.put("/users/:id", userController.updateUser);
-router.delete("/users/:id", userController.deleteUser);
+
+// User Routes
+router.get("/users", authMiddleware.auth, authMiddleware.admin, userController.getAllUsers);
+router.get("/users/:id", authMiddleware.auth, userController.getUserById);
+router.put("/users/:id", authMiddleware.auth, userController.updateUser);
+router.delete("/users/:id", authMiddleware.auth, userController.deleteUser);
 
 // Expense Routes
-router.post("/expenses", expenseController.createExpense);
-router.get("/expenses", expenseController.getAllExpenses);
-router.get("/expenses/:id", expenseController.getExpense);
-router.get("/expenses/user/:userId", expenseController.getExpensesByUser);
-router.put("/expenses/:id", expenseController.updateExpense);
-router.delete("/expenses/:id", expenseController.deleteExpense);
+router.post("/expenses", authMiddleware.auth, expenseController.createExpense);
+router.get("/expenses", authMiddleware.auth, expenseController.getAllExpenses);
+router.get("/expenses/:id", authMiddleware.auth, expenseController.getExpense);
+router.get("/expenses/user/:userId", authMiddleware.auth, expenseController.getExpensesByUser);
+router.put("/expenses/:id", authMiddleware.auth, expenseController.updateExpense);
+router.delete("/expenses/:id", authMiddleware.auth, expenseController.deleteExpense);
 
 // Category Routes
-router.post("/categories", categoryController.createCategory);
-router.get("/categories", categoryController.getAllCategories);
-router.get("/categories/:id", categoryController.getCategory);
-router.get("/categories/user/:userId", categoryController.getCategoriesByUser);
-router.put("/categories/:id", categoryController.updateCategory);
-router.delete("/categories/:id", categoryController.deleteCategory);
+router.post("/categories", authMiddleware.auth, categoryController.createCategory);
+router.get("/categories", authMiddleware.auth, categoryController.getAllCategories);
+router.get("/categories/:id", authMiddleware.auth, categoryController.getCategory);
+router.get("/categories/user/:userId", authMiddleware.auth, categoryController.getCategoriesByUser);
+router.put("/categories/:id", authMiddleware.auth, categoryController.updateCategory);
+router.delete("/categories/:id", authMiddleware.auth, categoryController.deleteCategory);

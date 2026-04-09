@@ -2,27 +2,38 @@ import { HttpError } from "../Error/HttpError";
 import { UserRepository } from "../Repository/UserRepository";
 import { CreateUserInput, LoginUserInput, UpdateUserInput } from "../Schema/UserSchema";
 import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
+import 'dotenv/config';
+
+const SECRET_KEY = process.env.SECRET_KEY
 
 export class UserService {
-  constructor(private userRepository: UserRepository) {}
+  constructor(private userRepository: UserRepository) { }
 
   async createUser(data: CreateUserInput) {
     const userExists = await this.userRepository.findByEmail(data.email);
     if (userExists) {
       throw new HttpError("User already exists", 400);
     }
-    data.password = bcrypt.hashSync(data.password,10)
+    data.password = bcrypt.hashSync(data.password, 10)
+    data.role = "standard"
     return await this.userRepository.create(data);
   }
 
-  async login(data: LoginUserInput){
+  async login(data: LoginUserInput) {
     const user = await this.userRepository.findByEmail(data.email)
-    if(!user || !bcrypt.compareSync(data.password, user.password)){
+    if (!user || !bcrypt.compareSync(data.password, user.password)) {
       throw new HttpError("Invalid Credentials", 400)
     }
 
-    const response = {...user, password: undefined, createdAt: undefined, updatedAt: undefined}
-    return response
+    const response = { ...user, password: undefined, createdAt: undefined, updatedAt: undefined }
+
+    if (!SECRET_KEY) {
+      throw new HttpError("Erro interno", 500);
+    }
+
+    const token = jwt.sign(response, SECRET_KEY, { expiresIn: "1d" })
+    return token
   }
 
   async getUserById(id: number) {
@@ -58,8 +69,8 @@ export class UserService {
       }
     }
 
-    if(data.password  && !bcrypt.compareSync(data.password, user.password)){
-      data.password = bcrypt.hashSync(data.password,10)
+    if (data.password && !bcrypt.compareSync(data.password, user.password)) {
+      data.password = bcrypt.hashSync(data.password, 10)
     }
 
     return await this.userRepository.update(id, data);

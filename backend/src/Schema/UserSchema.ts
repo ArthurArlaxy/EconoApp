@@ -1,9 +1,12 @@
 import { z } from "zod";
 
+const RuleEnum = z.enum(["standard", "admin" ,"premium"])
+
 export const createUserSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório").max(255),
   email: z.string().email("Email inválido"),
   password: z.string().min(4, "Senha deve ter no mínimo 6 caracteres"),
+  role: RuleEnum
 });
 
 export const loginUserSchema = z.object({
@@ -15,7 +18,8 @@ export const loginUserSchema = z.object({
 export const safeUserSchema = z.object({
   id:z.number(),
   name:z.string(),
-  email:z.string()
+  email:z.string(),
+  role: RuleEnum
 })
 
 export const updateUserSchema = z.object({

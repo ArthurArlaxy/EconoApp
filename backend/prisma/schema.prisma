@@ -18,6 +18,7 @@ model User {
   name      String   @db.VarChar(255)
   email     String   @unique
   password  String
+  role      Role     @default(standard) 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt @default(now())
 
@@ -55,4 +56,10 @@ model Category {
 
   expenses Expense[]
   @@unique([name, userId])
+}
+
+enum Role {
+  admin
+  standard
+  premium
 }
