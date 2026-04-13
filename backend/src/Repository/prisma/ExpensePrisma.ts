@@ -1,6 +1,6 @@
-import { PrismaClient, Expense } from "@prisma/client";
+import { PrismaClient, Expense, Prisma } from "@prisma/client";
 import { ExpenseRepository } from "../ExpenseRepository";
-import { CreateExpenseInput, UpdateExpenseInput } from "../../Schema/ExpenseSchema";
+import { CreateExpenseInput, GetExpenseQuery, UpdateExpenseInput } from "../../Schema/ExpenseSchema";
 
 export class ExpensePrismaRepository implements ExpenseRepository {
   constructor(private prisma: PrismaClient) { }
@@ -36,8 +36,13 @@ export class ExpensePrismaRepository implements ExpenseRepository {
     });
   }
 
-  async findAll(): Promise<Expense[]> {
-    return await this.prisma.expense.findMany();
+  async findAll(filter: Prisma.ExpenseWhereInput, pageSize: number, skip:number): Promise<Expense[]> {
+    return await this.prisma.expense.findMany({
+      where: filter,
+      orderBy: { name: "desc"},
+      skip,
+      take:pageSize
+    });
   }
 
   async update(id: number, data: UpdateExpenseInput): Promise<Expense> {

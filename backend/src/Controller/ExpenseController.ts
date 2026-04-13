@@ -1,6 +1,6 @@
 import { Handler } from "express";
 import { ExpenseService } from "../Service/ExpenseService";
-import { createExpenseSchema, updateExpenseSchema } from "../Schema/ExpenseSchema";
+import { createExpenseSchema, expenseQuerySchema, updateExpenseSchema } from "../Schema/ExpenseSchema";
 
 export class ExpenseController {
   constructor(private expenseService: ExpenseService) {}
@@ -27,7 +27,7 @@ export class ExpenseController {
 
   getExpensesByUser: Handler = async (req, res, next) => {
     try {
-      const userId = Number(req.params.userId);
+      const userId = Number(req.params.userId); 
       const expenses = await this.expenseService.getExpensesByUserId(userId);
       res.json(expenses);
     } catch (error) {
@@ -37,7 +37,8 @@ export class ExpenseController {
 
   getAllExpenses: Handler = async (req, res, next) => {
     try {
-      const expenses = await this.expenseService.getAllExpenses();
+      const query = expenseQuerySchema.parse(req.query)
+      const expenses = await this.expenseService.getAllExpenses(query);
       res.json(expenses);
     } catch (error) {
       next(error);

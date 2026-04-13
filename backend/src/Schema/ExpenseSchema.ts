@@ -12,6 +12,19 @@ export const createExpenseSchema = z.object({
   categoryId: z.coerce.number().int().positive(),
 });
 
+export const expenseQuerySchema = z.object({
+  page: z.coerce.number().optional(),
+  pageSize: z.coerce.number().optional(),
+  name: z.string().min(1, "Nome é obrigatório").max(255).optional(),
+  maxValue: z.coerce.number().positive("Valor deve ser positivo").optional(),
+  minValue: z.coerce.number().positive("Valor deve ser positivo").optional(),
+  startDate: z.coerce.date().optional(),
+  endDate: z.coerce.date().optional(),
+  isPaid: z.string().optional(),
+  isRecurring: z.string().optional(),
+  categoryId: z.coerce.number().int().positive().optional(),
+});
+
 export const updateExpenseSchema = z.object({
   name: z.string().min(1).max(255).optional(),
   value: z.coerce.number().positive().optional(),
@@ -30,3 +43,4 @@ export const getExpenseSchema = z.object({
 export type CreateExpenseInput = z.infer<typeof createExpenseSchema>;
 export type UpdateExpenseInput = z.infer<typeof updateExpenseSchema>;
 export type GetExpenseInput = z.infer<typeof getExpenseSchema>;
+export type GetExpenseQuery = z.infer<typeof expenseQuerySchema>;
