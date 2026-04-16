@@ -1,4 +1,4 @@
-import { PrismaClient, User } from "@prisma/client";
+import { Prisma, PrismaClient, User } from "@prisma/client";
 import { UserRepository } from "../UserRepository";
 import { CreateUserInput, SafeUserReturn, UpdateUserInput } from "../../Schema/UserSchema";
 
@@ -30,14 +30,17 @@ export class UserPrismaRepository implements UserRepository {
     });
   }
 
-  async findAll(): Promise<SafeUserReturn[]> {
+  async findAll(filter: Prisma.UserWhereInput, skip: number, pageSize:number): Promise<SafeUserReturn[]> {
     return await this.prisma.user.findMany({
+      where : filter,
       select: {
         id: true,
         email: true,
         name: true,
         role:true
-      }
+      },
+      skip,
+      take: pageSize
     });
   }
 

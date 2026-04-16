@@ -60,8 +60,62 @@ export class ExpenseService {
     return expense;
   }
 
-  async getExpensesByUserId(userId: number) {
-    return await this.expenseRepository.findByUserId(userId);
+  async getExpensesByUserId(userId: number,query: GetExpenseQuery) {
+    const filter: Prisma.ExpenseWhereInput = {}
+
+    if (query.name) {
+      filter.name = {
+        contains: query.name,
+        mode: "insensitive"
+      }
+    }
+
+    if (query.categoryId) {
+      filter.categoryId = query.categoryId
+    }
+
+    if (query.isPaid) {
+      if(query.isPaid === "true"){
+        filter.isPaid = true
+      }else{
+        filter.isPaid = false
+      }
+    }
+
+    
+    if (query.isRecurring) {
+      if(query.isRecurring === "true"){
+        filter.isRecurring = true
+      }else{
+        filter.isRecurring = false
+      }
+    }
+
+    if (query.maxValue !== undefined || query.minValue !== undefined) {
+      filter.value = {}
+      if (query.maxValue) {
+        filter.value.lte = query.maxValue
+      }
+      if (query.minValue) {
+        filter.value.gte = query.minValue
+      }
+    }
+
+    if (query.startDate !== undefined || query.endDate !== undefined) {
+      filter.dueDate = {}
+      if (query.startDate !== undefined) {
+        filter.dueDate.gte = query.startDate
+      }
+      if (query.endDate !== undefined) {
+        filter.dueDate.lte = query.endDate
+      }
+    }
+
+    const page = query.page || 1
+    const pageSize = query.pageSize || 10
+
+    const skip = (page - 1) * pageSize
+    return await this.expenseRepository.findByUserId(userId,filter, pageSize, skip);
   }
 
   async getAllExpenses(query: GetExpenseQuery) {

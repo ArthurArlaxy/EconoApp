@@ -29,10 +29,12 @@ export class ExpensePrismaRepository implements ExpenseRepository {
     });
   }
 
-  async findByUserId(userId: number): Promise<Expense[]> {
+  async findByUserId(userId: number,filter: Prisma.ExpenseWhereInput, pageSize:number, skip: number ): Promise<Expense[]> {
     return await this.prisma.expense.findMany({
-      where: { userId },
-      include: { category: true }
+      where: { userId, ...filter },
+      include: { category: true },
+      skip,
+      take: pageSize
     });
   }
 

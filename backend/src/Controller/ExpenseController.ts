@@ -28,7 +28,8 @@ export class ExpenseController {
   getExpensesByUser: Handler = async (req, res, next) => {
     try {
       const userId = Number(req.params.userId); 
-      const expenses = await this.expenseService.getExpensesByUserId(userId);
+      const query = expenseQuerySchema.parse(req.query)
+      const expenses = await this.expenseService.getExpensesByUserId(userId, query);
       res.json(expenses);
     } catch (error) {
       next(error);

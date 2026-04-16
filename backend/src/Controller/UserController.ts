@@ -1,6 +1,6 @@
 import { Handler } from "express";
 import { UserService } from "../Service/UserService";
-import { createUserSchema, loginUserSchema, updateUserSchema } from "../Schema/UserSchema";
+import { createUserSchema, loginUserSchema, updateUserSchema, userQuerySchema } from "../Schema/UserSchema";
 
 export class UserController {
   constructor(private userService: UserService) {}
@@ -40,7 +40,8 @@ export class UserController {
 
   getAllUsers: Handler = async (req, res, next) => {
     try {
-      const users = await this.userService.getAllUsers();
+      const query = userQuerySchema.parse(req.query)
+      const users = await this.userService.getAllUsers(query);
       res.json(users);
     } catch (error) {
       next(error);

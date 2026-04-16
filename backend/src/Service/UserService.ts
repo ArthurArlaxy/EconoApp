@@ -1,9 +1,10 @@
 import { HttpError } from "../Error/HttpError";
 import { UserRepository } from "../Repository/UserRepository";
-import { CreateUserInput, LoginUserInput, UpdateUserInput } from "../Schema/UserSchema";
+import { CreateUserInput, LoginUserInput, UpdateUserInput, UserQuerySchema } from "../Schema/UserSchema";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import 'dotenv/config';
+import { Prisma } from "@prisma/client";
 
 const SECRET_KEY = process.env.SECRET_KEY
 
@@ -52,8 +53,40 @@ export class UserService {
     return user;
   }
 
-  async getAllUsers() {
-    return await this.userRepository.findAll();
+  async getAllUsers(query: UserQuerySchema) {
+    const filter: Prisma.UserWhereInput = {}
+
+    if(query.name){
+      filter.name = {
+        contains: query.name,
+        mode : "insensitive"
+      }
+    }
+
+    if(query.email){
+      filter.email = {
+        equals: query.email,
+        mode: "insensitive"
+      }
+    }
+
+    if(query.role){
+      filter.role = {
+        equals: query.role
+      }
+    }
+
+    if( query.startDate || query.endDate){
+      filter.createdAt = {}
+      if (query.startDate) filter.createdAt.gte = query.startDate
+      if (query.endDate) filter.createdAt.lte = query.endDate
+    }
+
+    const page = query.page || 1
+    const pageSize = query.pageSize || 10
+    const skip = (page - 1) * pageSize
+
+    return await this.userRepository.findAll(filter, skip, pageSize);
   }
 
   async updateUser(id: number, data: UpdateUserInput) {

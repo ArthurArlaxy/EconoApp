@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const RuleEnum = z.enum(["standard", "admin" ,"premium"])
+const RuleEnum = z.enum(["standard", "admin", "premium"])
 
 export const createUserSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório").max(255),
@@ -10,15 +10,25 @@ export const createUserSchema = z.object({
 });
 
 export const loginUserSchema = z.object({
-  email:z.string(),
+  email: z.string(),
   password: z.string()
+})
+
+export const userQuerySchema = z.object({
+  name: z.string().min(1, "Nome é obrigatório").max(255).optional(),
+  email: z.string().email("Email inválido").optional(),
+  page: z.coerce.number().optional(),
+  pageSize: z.coerce.number().optional(),
+  startDate: z.coerce.date().optional(),
+  endDate: z.coerce.date().optional(),
+  role: RuleEnum.optional(),
 })
 
 
 export const safeUserSchema = z.object({
-  id:z.number(),
-  name:z.string(),
-  email:z.string(),
+  id: z.number(),
+  name: z.string(),
+  email: z.string(),
   role: RuleEnum
 })
 
@@ -37,3 +47,4 @@ export type UpdateUserInput = z.infer<typeof updateUserSchema>;
 export type GetUserInput = z.infer<typeof getUserSchema>;
 export type SafeUserReturn = z.infer<typeof safeUserSchema>
 export type LoginUserInput = z.infer<typeof loginUserSchema>
+export type UserQuerySchema = z.infer<typeof userQuerySchema>
