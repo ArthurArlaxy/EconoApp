@@ -69,11 +69,11 @@ export function AddExpense() {
                     </div>
                     <div className="inputs">
                         <label htmlFor="isRecurring">Is Recurring</label>
-                        <input type="checkbox" id="isRecurring" value={isRecurring} onChange={(ev) => setIsRecurring(ev.target.checked)} />
+                        <input type="checkbox" id="isRecurring" checked={isRecurring} onChange={(ev) => setIsRecurring(ev.target.checked)} />
                     </div>
                     <div className="inputs">
                         <label htmlFor="isPaid">Is Paid</label>
-                        <input type="checkbox" value={isPaid} id="isPaid" onChange={(ev) => setIsPaid(ev.target.checked)} />
+                        <input type="checkbox" checked={isPaid} id="isPaid" onChange={(ev) => setIsPaid(ev.target.checked)} />
                     </div>
                     <div className="inputs">
                         <label htmlFor="installments">Installmens</label>

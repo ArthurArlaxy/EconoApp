@@ -1,4 +1,5 @@
 import {NavLink, Outlet} from "react-router-dom"
+import { Login } from "./Login"
 
 export function MainLayout(){
     return(
@@ -8,6 +9,7 @@ export function MainLayout(){
                     <h1>Expense Menager💸</h1>
                     <nav>
                         <NavLink className="navBar">Dashboard</NavLink>
+                        <NavLink className="navBar">Add</NavLink>
                         <NavLink className="navBar">Search</NavLink>
                         <NavLink className="navBar">Settings</NavLink>
                         <NavLink className="navBar">View</NavLink>
