@@ -12,16 +12,14 @@ if (!SECRET_KEY) {
 export class AuthMiddleware {
 
     auth: Handler = (req, res, next) => {
-        const header = req.headers.authorization
+        const token = req.cookies.token
 
-        if (!header) {
+        if (!token || typeof token !== "string") {
             throw new HttpError("Invalid token", 401)
         }
 
-        const token = header.split(" ")[1]
-
         try {
-            const response = jwt.verify(token, SECRET_KEY)
+            const response = jwt.verify(token, SECRET_KEY!)
             if (!response) {
                 throw new HttpError("Erro interno", 500);
             }

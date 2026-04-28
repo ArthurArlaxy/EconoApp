@@ -1,6 +1,7 @@
 import { Handler } from "express";
 import { UserService } from "../Service/UserService";
 import { createUserSchema, loginUserSchema, updateUserSchema, userQuerySchema } from "../Schema/UserSchema";
+import { tr } from "zod/v4/locales";
 
 export class UserController {
   constructor(private userService: UserService) {}
@@ -21,7 +22,15 @@ export class UserController {
       const data = loginUserSchema.parse(req.body)
       const user = await this.userService.login(data)
 
-      res.status(200).json(user)
+      res.cookie("token",user, {
+        httpOnly:true,
+        secure: false,
+        sameSite: "lax",
+        maxAge: 24 * 60 * 60 * 1000
+      })
+
+
+      return res.status(200).json({message:"Login sucessfuly"})
 
     } catch (error) {
       next(error)

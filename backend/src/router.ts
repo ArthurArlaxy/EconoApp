@@ -31,7 +31,7 @@ const categoryController = new CategoryController(categoryService);
 
 // Login Routes
 router.post("/register", userController.register);
-router.get("/login", userController.login);
+router.post("/login", userController.login);
 
 // User Routes
 router.get("/users", authMiddleware.auth, authMiddleware.admin, userController.getAllUsers);
@@ -50,7 +50,7 @@ router.delete("/expenses/:id", authMiddleware.auth, expenseController.deleteExpe
 // Category Routes
 router.post("/categories", authMiddleware.auth, categoryController.createCategory);
 router.get("/categories", authMiddleware.auth,authMiddleware.admin, categoryController.getAllCategories);
+router.get("/categories/user", authMiddleware.auth, categoryController.getCategoriesByUser);
 router.get("/categories/:id", authMiddleware.auth, categoryController.getCategory);
-router.get("/categories/user/:userId", authMiddleware.auth, categoryController.getCategoriesByUser);
 router.put("/categories/:id", authMiddleware.auth, categoryController.updateCategory);
 router.delete("/categories/:id", authMiddleware.auth, categoryController.deleteCategory);

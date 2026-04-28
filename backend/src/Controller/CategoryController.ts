@@ -1,6 +1,7 @@
 import { Handler } from "express";
 import { CategoryService } from "../Service/CategoryService";
 import { createCategorySchema, updateCategorySchema } from "../Schema/CategorySchema";
+import { HttpError } from "../Error/HttpError";
 
 export class CategoryController {
   constructor(private categoryService: CategoryService) {}
@@ -27,11 +28,16 @@ export class CategoryController {
 
   getCategoriesByUser: Handler = async (req, res, next) => {
     try {
-      const userId = Number(req.params.userId);
-      const categories = await this.categoryService.getCategoriesByUserId(userId);
-      res.json(categories);
+        if (!req.user) {
+            throw new HttpError("Invalid token", 401)
+        }
+
+        const userId = (req.user as any).id
+
+        const categories = await this.categoryService.getCategoriesByUserId(userId);
+        res.json(categories);
     } catch (error) {
-      next(error);
+        next(error);
     }
   };
 
