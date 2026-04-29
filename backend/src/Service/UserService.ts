@@ -16,9 +16,20 @@ export class UserService {
     if (userExists) {
       throw new HttpError("User already exists", 400);
     }
+
     data.password = bcrypt.hashSync(data.password, 10)
     data.role = "standard"
-    return await this.userRepository.create(data);
+
+    const user = await this.userRepository.create(data);
+
+    const response = { ...user, password: undefined, createdAt: undefined, updatedAt: undefined }
+
+    if (!SECRET_KEY) {
+      throw new HttpError("Erro interno", 500);
+    }
+
+    const token = jwt.sign(response, SECRET_KEY, { expiresIn: "1d" })
+    return token
   }
 
   async login(data: LoginUserInput) {

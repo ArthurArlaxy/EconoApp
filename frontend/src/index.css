@@ -333,6 +333,43 @@ input[type="number"] {
     margin-bottom: 24px;
 }
 
+/* ================= AUTH TOGGLE ================= */
+.auth-toggle {
+    display: flex;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 4px;
+    margin-bottom: 24px;
+    gap: 4px;
+}
+
+.auth-toggle button {
+    flex: 1;
+    padding: 9px 0;
+    border: none;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.auth-toggle button.active {
+    background: var(--accent);
+    color: #020617;
+    box-shadow: var(--shadow-btn);
+}
+
+.auth-toggle button:not(.active):hover {
+    color: var(--accent);
+    background: var(--accent-muted);
+}
+
 /* ===================================================
 RESPONSIVO
 =================================================== */

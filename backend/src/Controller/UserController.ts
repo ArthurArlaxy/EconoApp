@@ -1,36 +1,44 @@
 import { Handler } from "express";
 import { UserService } from "../Service/UserService";
 import { createUserSchema, loginUserSchema, updateUserSchema, userQuerySchema } from "../Schema/UserSchema";
-import { tr } from "zod/v4/locales";
 
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   register: Handler = async (req, res, next) => {
     try {
       const data = createUserSchema.parse(req.body);
       const user = await this.userService.createUser(data);
-      res.status(201).json(user);
+      
+      res.cookie("token", user, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        maxAge: 24 * 60 * 60 * 1000
+      })
+
+      return res.status(201).json({ message: "Register sucessfuly" })
+    
     } catch (error) {
       next(error);
     }
   };
 
-  login: Handler = async (req, res, next) =>{
+  login: Handler = async (req, res, next) => {
     try {
-      
+
       const data = loginUserSchema.parse(req.body)
       const user = await this.userService.login(data)
 
-      res.cookie("token",user, {
-        httpOnly:true,
+      res.cookie("token", user, {
+        httpOnly: true,
         secure: false,
         sameSite: "lax",
         maxAge: 24 * 60 * 60 * 1000
       })
 
 
-      return res.status(200).json({message:"Login sucessfuly"})
+      return res.status(200).json({ message: "Login sucessfuly" })
 
     } catch (error) {
       next(error)
