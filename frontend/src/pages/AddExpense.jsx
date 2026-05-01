@@ -29,7 +29,16 @@ export function AddExpense() {
         ev.preventDefault()
 
         try {
-            await addExpenseApi(value, name, dueDate, description, category, isRecurring, isPaid, installments)
+            await addExpenseApi({
+                value: Number(value),
+                name,
+                dueDate,
+                description: description || undefined,
+                categoryId: Number(category),
+                isRecurring,
+                isPaid,
+                installments: installments ? Number(installments) : undefined
+            })
             // limpa o form só após sucesso
             setValue("")
             setName("")

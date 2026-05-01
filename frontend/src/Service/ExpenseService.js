@@ -13,8 +13,11 @@ export async function getExpensesApi(page, filters) {
     const response = await fetch(`${API_URL}/expenses/user?${params}`, {
         credentials: "include"
     })
+    
     const data = await response.json()
+
     if (!response.ok) throw new Error(data.message || "Erro ao buscar despesas")
+
     return data
 }
 
@@ -25,8 +28,11 @@ export async function addExpenseApi(payload) {
         body: JSON.stringify(payload),
         credentials: "include"
     })
+    
     const data = await response.json()
+
     if (!response.ok) throw new Error(data.message || "Erro ao criar despesa")
+
     return data
 }
 
@@ -34,7 +40,37 @@ export async function getCategoriesApi() {
     const response = await fetch(`${API_URL}/categories/user`, {
         credentials: "include"
     })
+
     const data = await response.json()
+
     if (!response.ok) throw new Error(data.message || "Erro ao buscar categorias")
+
+    return data
+}
+
+export async function getExpenseByIdApi(id) {
+    const response = await fetch(`${API_URL}/expenses/${id}`, {
+        credentials: "include"
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) throw new Error(data.message || "Erro ao buscar despesa")
+
+    return data
+}
+
+export async function updateExpenseApi(id, payload) {
+    const response = await fetch(`${API_URL}/expenses/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        credentials: "include"
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) throw new Error(data.message || "Erro ao atualizar despesa")
+
     return data
 }

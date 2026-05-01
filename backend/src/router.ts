@@ -40,10 +40,11 @@ router.put("/users/:id", authMiddleware.auth, userController.updateUser);
 router.delete("/users/:id", authMiddleware.auth, userController.deleteUser);
 
 // Expense Routes
+// Expense Routes
 router.post("/expenses", authMiddleware.auth, expenseController.createExpense);
-router.get("/expenses", authMiddleware.auth, authMiddleware.admin, expenseController.getAllExpenses);
-router.get("/expenses/user", authMiddleware.auth, expenseController.getExpensesByUser);
-router.get("/expenses/:id", authMiddleware.auth, authMiddleware.admin, expenseController.getExpense);
+router.get("/expenses", authMiddleware.auth, authMiddleware.admin, expenseController.getAllExpenses);    // ← admin: lista todas
+router.get("/expenses/user", authMiddleware.auth, expenseController.getExpensesByUser);                 // ← usuário: lista as suas
+router.get("/expenses/:id", authMiddleware.auth, expenseController.getExpense);                         // ← usuário: busca a própria (já tem verificação de userId no controller)
 router.put("/expenses/:id", authMiddleware.auth, expenseController.updateExpense);
 router.delete("/expenses/:id", authMiddleware.auth, expenseController.deleteExpense);
 

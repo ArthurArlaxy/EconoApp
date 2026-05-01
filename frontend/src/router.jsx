@@ -3,6 +3,7 @@ import { MainLayout } from './pages/MainLayout'
 import { Login } from './pages/Login'
 import { Dashboard } from './pages/Dashboard'
 import { AddExpense } from './pages/AddExpense'
+import { EditExpense } from './pages/EditExpense' 
 
 export const router = createBrowserRouter([
     {
@@ -15,6 +16,7 @@ export const router = createBrowserRouter([
         children: [
             { index: true, element: <Dashboard /> },
             { path: "add-expense", element: <AddExpense /> },
+            { path: "expenses/:id", element: <EditExpense /> } 
         ]
     }
 ])

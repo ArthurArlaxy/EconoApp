@@ -7,7 +7,7 @@ export const createExpenseSchema = z.object({
   description: z.string().optional(),
   isPaid: z.boolean().default(false),
   isRecurring: z.boolean().default(false),
-  installments: z.coerce.number().int().min(0).optional(), 
+  installments: z.coerce.number().int().min(0).optional(),
   userId: z.coerce.number().int().positive(),
   categoryId: z.coerce.number().int().positive(),
 });
@@ -29,7 +29,7 @@ export const updateExpenseSchema = z.object({
   name: z.string().min(1).max(255).optional(),
   value: z.coerce.number().positive().optional(),
   dueDate: z.coerce.date().optional(),
-  description: z.string().optional(),
+  description: z.string().nullish().optional(), 
   isPaid: z.boolean().optional(),
   isRecurring: z.boolean().optional(),
   installments: z.coerce.number().int().positive().optional(),

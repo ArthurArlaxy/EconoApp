@@ -25,15 +25,23 @@ export class ExpenseController {
     }
   }
 
-  getExpense: Handler = async (req, res, next) => {
+getExpense: Handler = async (req, res, next) => {
     try {
-      const id = Number((req.user as any).id);
-      const expense = await this.expenseService.getExpenseById(id);
-      res.json(expense);
+        if (!req.user) throw new HttpError("Invalid token", 401)
+
+        const id = Number(req.params.id) // ← params, não token
+        const expense = await this.expenseService.getExpenseById(id)
+
+        // garante que o usuário só acessa a própria despesa
+        if (expense.userId !== (req.user as any).id) {
+            throw new HttpError("Forbidden", 403)
+        }
+
+        res.json(expense)
     } catch (error) {
-      next(error);
+        next(error)
     }
-  };
+}
 
   getExpensesByUser: Handler = async (req, res, next) => {
     try {

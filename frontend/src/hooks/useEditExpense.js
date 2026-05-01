@@ -1,0 +1,60 @@
+import { useState, useEffect } from "react"
+import { useNavigate, useParams } from "react-router-dom"
+import { getExpenseByIdApi, updateExpenseApi, getCategoriesApi } from "../service/expenseService"
+
+export function useEditExpense() {
+    const { id } = useParams()
+    const navigate = useNavigate()
+
+    const [form, setForm] = useState(null)
+    const [categories, setCategories] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [saving, setSaving] = useState(false)
+    const [error, setError] = useState("")
+
+    useEffect(() => {
+        async function load() {
+            try {
+                const [expense, cats] = await Promise.all([
+                    getExpenseByIdApi(id),
+                    getCategoriesApi()
+                ])
+                setForm({
+                    ...expense,
+                    dueDate: expense.dueDate?.split("T")[0],
+                    categoryId: expense.category?.id || expense.categoryId
+                })
+                setCategories(cats)
+            } catch (err) {
+                setError(err.message)
+            } finally {
+                setLoading(false)
+            }
+        }
+        load()
+    }, [id])
+
+    async function handleSave() {
+        setSaving(true)
+        setError("")
+        try {
+            await updateExpenseApi(id, {
+                name: form.name,
+                value: Number(form.value),
+                dueDate: form.dueDate,
+                description: form.description,
+                isPaid: form.isPaid,
+                isRecurring: form.isRecurring,
+                installments: form.installments ? Number(form.installments) : undefined,
+                categoryId: Number(form.categoryId)
+            })
+            navigate("/app")
+        } catch (err) {
+            setError(err.message)
+        } finally {
+            setSaving(false)
+        }
+    }
+
+    return { form, setForm, categories, loading, saving, error, handleSave }
+}

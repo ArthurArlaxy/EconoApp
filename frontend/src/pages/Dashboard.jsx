@@ -1,10 +1,12 @@
 import { useExpenses } from "../hooks/useExpenses"
+import { useNavigate } from "react-router-dom"
 
 const fmt = (v) => Number(v).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
 const fmtDate = (d) => new Date(d).toLocaleDateString("pt-BR")
 const initials = (name) => name.split(" ").slice(0, 2).map(w => w[0]).join("").toUpperCase()
 
 export function Dashboard() {
+    const navigate = useNavigate()
     const {
         expenses, loading, error,
         page, setPage, totalPages,
@@ -75,7 +77,16 @@ export function Dashboard() {
                                     {e.installments > 0 && <span className="badge badge-installment">{e.installments}x</span>}
                                 </div>
                             </div>
-                            <div className="expense-value">{fmt(e.value)}</div>
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                <div className="expense-value">{fmt(e.value)}</div>
+                                <button
+                                    className="btn-edit"
+                                    onClick={() => navigate(`/app/expenses/${e.id}`)}
+                                    title="Editar"
+                                >
+                                    ✎
+                                </button>
+                            </div>
                         </div>
                     ))}
                 </div>
