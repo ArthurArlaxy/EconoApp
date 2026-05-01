@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react"
-import { getCategories } from "../Service/ExpenseService"
+import { getCategoriesApi, addExpenseApi } from "../Service/ExpenseService"
 import "../index.css"
 
 export function AddExpense() {
-
     const [value, setValue] = useState("")
     const [name, setName] = useState("")
     const [dueDate, setDueDate] = useState("")
@@ -17,26 +16,32 @@ export function AddExpense() {
     useEffect(() => {
         async function loadCategories() {
             try {
-                let data = await getCategories(1)
+                const data = await getCategoriesApi() // ← sem o parâmetro 1
                 setCategories(data)
             } catch (error) {
                 console.error("Erro ao carregar categorias", error)
             }
         }
-
         loadCategories()
     }, [])
 
-    const handleSubmit = (ev) => {
+    const handleSubmit = async (ev) => { // ← async aqui
         ev.preventDefault()
-        setValue("")
-        setName("")
-        setDueDate("")
-        setDescription("")
-        setCategory("")
-        setIsRecurring(false)
-        setIsPaid(false)
-        setInstallments("")
+
+        try {
+            await addExpenseApi(value, name, dueDate, description, category, isRecurring, isPaid, installments)
+            // limpa o form só após sucesso
+            setValue("")
+            setName("")
+            setDueDate("")
+            setDescription("")
+            setCategory("")
+            setIsRecurring(false)
+            setIsPaid(false)
+            setInstallments("")
+        } catch (error) {
+            console.log(error.message)
+        }
     }
 
     return (
@@ -58,12 +63,10 @@ export function AddExpense() {
                     </div>
                     <div className="inputs">
                         <label htmlFor="category">Category</label>
-                        <select id="category" required value={category} onChange={(ev) => setCategory(ev.target.value)} >
+                        <select id="category" required value={category} onChange={(ev) => setCategory(ev.target.value)}>
                             <option value="" disabled>Choose category</option>
                             {categories.map((cat) => (
-                                <option key={cat.id} value={cat.id}>
-                                    {cat.name}
-                                </option>
+                                <option key={cat.id} value={cat.id}>{cat.name}</option>
                             ))}
                         </select>
                     </div>
@@ -76,17 +79,16 @@ export function AddExpense() {
                         <input type="checkbox" checked={isPaid} id="isPaid" onChange={(ev) => setIsPaid(ev.target.checked)} />
                     </div>
                     <div className="inputs">
-                        <label htmlFor="installments">Installmens</label>
+                        <label htmlFor="installments">Installments</label>
                         <input type="number" id="installments" value={installments} onChange={(ev) => setInstallments(ev.target.value)} />
                     </div>
                 </section>
                 <div className="inputs">
                     <label htmlFor="description">Description</label>
-                    <textarea name="description" id="description" value={description} onChange={(ev) => setDescription(ev.target.value)}></textarea>
+                    <textarea id="description" value={description} onChange={(ev) => setDescription(ev.target.value)}></textarea>
                 </div>
                 <button className="btnPrincipal" type="submit">Adicionar</button>
             </form>
-
         </>
     )
 }
