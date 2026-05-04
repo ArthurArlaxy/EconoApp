@@ -12,12 +12,15 @@ export function useExpenses() {
     const [error, setError] = useState("")
     const [page, setPage] = useState(1)
     const [total, setTotal] = useState(0)
+    const [totalValue, setTotalValue] = useState(0) // ← total real do backend
     const [form, setForm] = useState(EMPTY_FORM)
     const [filters, setFilters] = useState({})
 
     const pageSize = 10
     const totalPages = Math.max(1, Math.ceil(total / pageSize))
-    const totalVal = expenses.reduce((s, e) => s + Number(e.value), 0)
+
+    // totalVal vem do backend — preciso do valor real, não só da página atual
+    const totalVal = totalValue
     const paidVal = expenses.filter(e => e.isPaid).reduce((s, e) => s + Number(e.value), 0)
     const unpaidVal = expenses.filter(e => !e.isPaid).reduce((s, e) => s + Number(e.value), 0)
 
@@ -26,8 +29,10 @@ export function useExpenses() {
         setError("")
         try {
             const data = await getExpensesApi(page, filters)
-            setExpenses(data.expenses || data)
-            setTotal(data.total || (data.expenses || data).length)
+            const list = data.expenses || data
+            setExpenses(list)
+            setTotal(data.total || list.length)
+            setTotalValue(Number(data.totalValue) || 0)
         } catch (err) {
             setError(err.message)
         } finally {

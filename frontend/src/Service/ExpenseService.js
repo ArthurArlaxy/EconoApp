@@ -74,3 +74,19 @@ export async function updateExpenseApi(id, payload) {
 
     return data
 }
+
+export async function deleteExpenseApi(id) {
+    const response = await fetch(`${API_URL}/expenses/${id}`,{
+        method: "DELETE",
+        headers: { "Content-Type" : "application/json" },
+        credentials: "include"
+    })
+
+    const data = await response.json()
+
+    if(!response.ok){
+        throw new Error(data.message || "Erro ao atualizar despesa")
+    }
+
+    return data
+}

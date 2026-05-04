@@ -1,3 +1,4 @@
+import { Expense } from "@prisma/client";
 import { z } from "zod";
 
 export const createExpenseSchema = z.object({
@@ -35,6 +36,12 @@ export const updateExpenseSchema = z.object({
   installments: z.coerce.number().int().positive().optional(),
   categoryId: z.coerce.number().int().positive().optional(),
 });
+
+export interface PaginatedExpenses {
+    expenses: Expense[]
+    total: number
+    totalValue: number
+}
 
 export const getExpenseSchema = z.object({
   id: z.coerce.number().int().positive(),

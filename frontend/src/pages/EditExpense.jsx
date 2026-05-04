@@ -3,7 +3,7 @@ import { useEditExpense } from "../hooks/useEditExpense"
 
 export function EditExpense() {
     const navigate = useNavigate()
-    const { form, setForm, categories, loading, saving, error, handleSave } = useEditExpense()
+    const { form, setForm, categories, loading, saving, deleting, error, handleSave, handleDelete } = useEditExpense()
 
     if (loading) return <p style={{ textAlign: "center", color: "var(--text-secondary)", padding: "2rem" }}>Carregando...</p>
     if (!form) return null
@@ -66,23 +66,32 @@ export function EditExpense() {
 
                 {error && <p style={{ color: "#f87171", fontSize: "13px", marginTop: "12px" }}>{error}</p>}
 
-                <div style={{ display: "flex", gap: "8px", marginTop: "24px" }}>
+                <div className="form-actions">
                     <button
                         type="button"
-                        onClick={() => navigate("/app")}
-                        style={{ flex: 1, padding: "13px", borderRadius: "var(--radius-md)", border: "1px solid var(--border)", background: "transparent", color: "var(--text-secondary)", fontFamily: "var(--font)", fontSize: "15px", fontWeight: 700, cursor: "pointer" }}
+                        className="btn-danger"
+                        onClick={handleDelete}
+                        disabled={deleting}
                     >
-                        Cancelar
+                        {deleting ? "Excluindo..." : "Excluir"}
                     </button>
-                    <button
-                        type="button"
-                        className="btnPrincipal"
-                        onClick={handleSave}
-                        disabled={saving}
-                        style={{ flex: 1, marginTop: 0 }}
-                    >
-                        {saving ? "Salvando..." : "Salvar"}
-                    </button>
+                    <div className="form-actions-right">
+                        <button
+                            type="button"
+                            className="btn-cancel"
+                            onClick={() => navigate("/app")}
+                        >
+                            Cancelar
+                        </button>
+                        <button
+                            type="button"
+                            className="btnPrincipal btn-save"
+                            onClick={handleSave}
+                            disabled={saving}
+                        >
+                            {saving ? "Salvando..." : "Salvar"}
+                        </button>
+                    </div>
                 </div>
             </form>
         </main>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { getExpenseByIdApi, updateExpenseApi, getCategoriesApi } from "../service/expenseService"
+import { getExpenseByIdApi, updateExpenseApi, getCategoriesApi, deleteExpenseApi } from "../service/expenseService"
 
 export function useEditExpense() {
     const { id } = useParams()
@@ -10,6 +10,7 @@ export function useEditExpense() {
     const [categories, setCategories] = useState([])
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
+    const [deleting, setDeleting] = useState(false) 
     const [error, setError] = useState("")
 
     useEffect(() => {
@@ -42,7 +43,7 @@ export function useEditExpense() {
                 name: form.name,
                 value: Number(form.value),
                 dueDate: form.dueDate,
-                description: form.description,
+                description: form.description || undefined, // ← null vira undefined
                 isPaid: form.isPaid,
                 isRecurring: form.isRecurring,
                 installments: form.installments ? Number(form.installments) : undefined,
@@ -56,5 +57,18 @@ export function useEditExpense() {
         }
     }
 
-    return { form, setForm, categories, loading, saving, error, handleSave }
+    async function handleDelete() {
+        if (!confirm("Tem certeza que deseja excluir esta despesa?")) return 
+        setDeleting(true)
+        try {
+            await deleteExpenseApi(id)
+            navigate("/app")
+        } catch (err) {
+            setError(err.message)
+        } finally {
+            setDeleting(false)
+        }
+    }
+
+    return { form, setForm, categories, loading, saving, deleting, error, handleSave, handleDelete }
 }

@@ -686,7 +686,66 @@ input[type="number"] {
     border-color: rgba(56, 189, 248, 0.3);
 }
 
+/* ================= FORM ACTIONS ================= */
+.form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 24px;
+}
 
+.form-actions-right {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-danger {
+    padding: 13px 20px;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    background: rgba(239, 68, 68, 0.1);
+    color: #f87171;
+    font-family: var(--font);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-danger:hover:not(:disabled) {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.6);
+}
+
+.btn-danger:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-cancel {
+    padding: 13px 20px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: var(--font);
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.btn-cancel:hover {
+    color: var(--text-primary);
+    border-color: var(--text-secondary);
+}
+
+.btn-save {
+    margin-top: 0;
+    width: auto;
+    padding: 13px 28px;
+}
 /* ===================================================
 RESPONSIVO
 =================================================== */
