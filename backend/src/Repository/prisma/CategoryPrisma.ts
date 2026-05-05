@@ -3,7 +3,7 @@ import { CategoryRepository } from "../CategoryRepository";
 import { CreateCategoryInput, UpdateCategoryInput } from "../../Schema/CategorySchema";
 
 export class CategoryPrismaRepository implements CategoryRepository {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient) { }
 
   async create(data: CreateCategoryInput): Promise<Category> {
     return await this.prisma.category.create({
@@ -19,10 +19,19 @@ export class CategoryPrismaRepository implements CategoryRepository {
 
   async findByUserId(userId: number): Promise<Category[]> {
     return await this.prisma.category.findMany({
-      where: { OR: [
-        {userId},
-        {userId: 0}
-      ] },
+      where: {
+        OR: [
+          { userId },
+          { userId: 0 }
+        ]
+      },
+      include: {
+        _count: {
+          select: { expenses: {
+            where: { userId }
+          }}
+        }
+      }
     });
   }
 

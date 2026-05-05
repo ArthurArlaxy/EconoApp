@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
-import { getExpensesApi } from "../service/expenseService"
+import { getExpensesApi } from "../Service/expenseService"
 
 const EMPTY_FORM = {
     name: "", startDate: "", endDate: "",

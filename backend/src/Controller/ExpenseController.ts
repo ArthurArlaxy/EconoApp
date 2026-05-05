@@ -25,30 +25,30 @@ export class ExpenseController {
     }
   }
 
-getExpense: Handler = async (req, res, next) => {
+  getExpense: Handler = async (req, res, next) => {
     try {
-        if (!req.user) throw new HttpError("Invalid token", 401)
+      if (!req.user) throw new HttpError("Invalid token", 401)
 
-        const id = Number(req.params.id) // ← params, não token
-        const expense = await this.expenseService.getExpenseById(id)
+      const id = Number(req.params.id) // ← params, não token
+      const expense = await this.expenseService.getExpenseById(id)
 
-        // garante que o usuário só acessa a própria despesa
-        if (expense.userId !== (req.user as any).id) {
-            throw new HttpError("Forbidden", 403)
-        }
+      // garante que o usuário só acessa a própria despesa
+      if (expense.userId !== (req.user as any).id) {
+        throw new HttpError("Forbidden", 403)
+      }
 
-        res.json(expense)
+      res.json(expense)
     } catch (error) {
-        next(error)
+      next(error)
     }
-}
+  }
 
   getExpensesByUser: Handler = async (req, res, next) => {
     try {
       if (!req.user) throw new HttpError("Invalid token", 401)
 
       const userId = (req.user as any).id
-      const query = expenseQuerySchema.parse(req.query) 
+      const query = expenseQuerySchema.parse(req.query)
 
       const expenses = await this.expenseService.getExpensesByUserId(userId, query)
       res.json(expenses)
@@ -68,9 +68,20 @@ getExpense: Handler = async (req, res, next) => {
 
   updateExpense: Handler = async (req, res, next) => {
     try {
+      if (!req.user) throw new HttpError("Invalid token", 401)
+
       const id = Number(req.params.id);
+
+      const expenseExist = await this.expenseService.getExpenseById(id)
+
+      // garante que o usuário só acessa a própria despesa
+      if (!expenseExist || expenseExist.userId !== (req.user as any).id) {
+        throw new HttpError("Forbidden", 403)
+      }
+
       const data = updateExpenseSchema.parse(req.body);
       const expense = await this.expenseService.updateExpense(id, data);
+
       res.json(expense);
     } catch (error) {
       next(error);
@@ -79,7 +90,18 @@ getExpense: Handler = async (req, res, next) => {
 
   deleteExpense: Handler = async (req, res, next) => {
     try {
+
+      if (!req.user) throw new HttpError("Invalid token", 401)
+
       const id = Number(req.params.id);
+
+      const expenseExist = await this.expenseService.getExpenseById(id)
+
+      // garante que o usuário só acessa a própria despesa
+      if (!expenseExist || expenseExist.userId !== (req.user as any).id) {
+        throw new HttpError("Forbidden", 403)
+      }
+
       const expense = await this.expenseService.deleteExpense(id);
       res.json({ message: "Despesa deletada com sucesso", expense });
     } catch (error) {
