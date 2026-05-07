@@ -1,4 +1,126 @@
+import { useState, useRef, useEffect } from "react"
 import { useCategory } from "../hooks/useCategory"
+
+const EMOJI_CATEGORIES = [
+    { label: "🍔", name: "Comida", emojis: ["🍔", "🍕", "🍣", "🍜", "🍱", "🥗", "🌮", "🥪", "🍰", "☕", "🧃", "🍺", "🥤", "🍷", "🧁"] },
+    { label: "🚗", name: "Transporte", emojis: ["🚗", "🚕", "🚌", "🚎", "🏍️", "🚲", "✈️", "🚀", "🚢", "🚆", "🚁", "⛽", "🅿️", "🛻", "🚐"] },
+    { label: "🏠", name: "Moradia", emojis: ["🏠", "🏡", "🏢", "🏗️", "🛋️", "🪑", "🛏️", "🚿", "🪴", "💡", "🔧", "🪟", "🚪", "🧹", "🪣"] },
+    { label: "💊", name: "Saúde", emojis: ["💊", "🏥", "🩺", "💉", "🩹", "🧬", "🦷", "👁️", "🧘", "🏃", "💪", "🧠", "❤️", "🩻", "🩼"] },
+    { label: "📚", name: "Educação", emojis: ["📚", "✏️", "📝", "🎓", "🏫", "🔬", "📐", "📏", "🖊️", "📖", "🗒️", "📓", "🖥️", "💻", "📡"] },
+    { label: "🎮", name: "Lazer", emojis: ["🎮", "🎬", "🎵", "🎸", "🎯", "🎲", "🎪", "🎭", "🎨", "🎤", "🎹", "🎷", "🎻", "🎰", "🕹️"] },
+    { label: "⚽", name: "Esportes", emojis: ["⚽", "🏀", "🏈", "⚾", "🎾", "🏐", "🏉", "🎱", "🏊", "🚴", "🧗", "🏋️", "⛷️", "🤿", "🥊"] },
+    { label: "👕", name: "Vestuário", emojis: ["👕", "👗", "👠", "👟", "🧥", "👒", "🧣", "🧤", "👜", "💍", "⌚", "🕶️", "🧦", "👔", "👙"] },
+    { label: "📱", name: "Tecnologia", emojis: ["📱", "💻", "🖨️", "⌨️", "🖱️", "📷", "📹", "📺", "📻", "🔋", "💾", "💿", "🖲️", "📠", "☎️"] },
+    { label: "🐶", name: "Pets", emojis: ["🐶", "🐱", "🐰", "🐹", "🐸", "🐟", "🐦", "🐢", "🦎", "🐍", "🦴", "🐾", "🦮", "🐈", "🐇"] },
+    { label: "💰", name: "Finanças", emojis: ["💰", "💳", "🏦", "💵", "💴", "💶", "💷", "📈", "📉", "🪙", "💸", "🏧", "📊", "🧾", "💹"] },
+    { label: "✈️", name: "Viagem", emojis: ["🌍", "🗺️", "🏖️", "🏔️", "🗽", "🏰", "⛺", "🎡", "🎢", "🛂", "🧳", "🗼", "🌋", "🏕️", "🚡"] },
+    { label: "💼", name: "Trabalho", emojis: ["💼", "📋", "📌", "📎", "🗂️", "🖋️", "📧", "📞", "🗓️", "⏰", "🔑", "🏆", "🎖️", "📣", "🔔"] },
+]
+
+function EmojiPicker({ value, onChange }) {
+    const [open, setOpen] = useState(false)
+    const [activeTab, setActiveTab] = useState(0)
+    const ref = useRef(null)
+    const isMobile = typeof window !== "undefined" && window.innerWidth <= 768
+
+    useEffect(() => {
+        function handleClick(e) {
+            if (ref.current && !ref.current.contains(e.target)) {
+                setOpen(false)
+            }
+        }
+        document.addEventListener("mousedown", handleClick)
+        return () => document.removeEventListener("mousedown", handleClick)
+    }, [])
+
+    // bloqueia scroll do body no mobile quando aberto
+    useEffect(() => {
+        if (isMobile) {
+            document.body.style.overflow = open ? "hidden" : ""
+        }
+        return () => { document.body.style.overflow = "" }
+    }, [open, isMobile])
+
+    function selectEmoji(emoji) {
+        onChange(emoji)
+        setOpen(false)
+    }
+
+    return (
+        <div ref={ref} style={{ position: "relative" }}>
+            <button
+                type="button"
+                className="emoji-trigger"
+                onClick={() => setOpen(p => !p)}
+            >
+                <span style={{ fontSize: "22px", lineHeight: 1 }}>{value || "😀"}</span>
+                <span style={{ fontSize: "13px", color: "var(--text-secondary)", flex: 1, textAlign: "left" }}>
+                    {value ? "Trocar ícone" : "Escolher ícone"}
+                </span>
+                <span style={{ fontSize: "11px", color: "var(--text-placeholder)" }}>
+                    {open ? "▲" : "▼"}
+                </span>
+            </button>
+
+            {open && (
+                <>
+                    {/* overlay escuro no mobile */}
+                    <div
+                        className="emoji-overlay"
+                        onClick={() => setOpen(false)}
+                    />
+
+                    <div className="emoji-picker-dropdown">
+                        {/* header mobile */}
+                        <div className="emoji-picker-header">
+                            <span style={{ fontSize: "13px", fontWeight: 600, color: "var(--text-primary)" }}>
+                                {EMOJI_CATEGORIES[activeTab].name}
+                            </span>
+                            {value && (
+                                <button
+                                    type="button"
+                                    onClick={() => { onChange(""); setOpen(false) }}
+                                    style={{ fontSize: "12px", color: "var(--text-secondary)", background: "none", border: "none", cursor: "pointer", fontFamily: "var(--font)" }}
+                                >
+                                    Limpar
+                                </button>
+                            )}
+                        </div>
+
+                        {/* abas com scroll horizontal drag */}
+                        <div className="emoji-tabs">
+                            {EMOJI_CATEGORIES.map((cat, i) => (
+                                <button
+                                    key={i}
+                                    type="button"
+                                    className={`emoji-tab ${activeTab === i ? "emoji-tab--active" : ""}`}
+                                    onClick={() => setActiveTab(i)}
+                                    title={cat.name}
+                                >
+                                    {cat.label}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* grid */}
+                        <div className="emoji-grid">
+                            {EMOJI_CATEGORIES[activeTab].emojis.map(emoji => (
+                                <button
+                                    key={emoji}
+                                    type="button"
+                                    className={`emoji-btn ${value === emoji ? "emoji-btn--active" : ""}`}
+                                    onClick={() => selectEmoji(emoji)}
+                                >
+                                    {emoji}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </>
+            )}
+        </div>
+    )
+}
 
 export function Categories() {
     const { categories, loading, saving, error, form, setForm, handleCreate, handleDelete } = useCategory()
@@ -33,19 +155,16 @@ export function Categories() {
                         <label>Cor</label>
                         <input
                             type="color"
-                            value={form.color || "#38bdf8"}
+                            value={form.color || "#ffffff"}
                             onChange={e => setForm(f => ({ ...f, color: e.target.value }))}
                             style={{ height: "40px", padding: "2px 6px", cursor: "pointer" }}
                         />
                     </div>
                     <div className="filter-group">
-                        <label>Ícone (emoji)</label>
-                        <input
-                            type="text"
+                        <label>Ícone</label>
+                        <EmojiPicker
                             value={form.logo}
-                            onChange={e => setForm(f => ({ ...f, logo: e.target.value }))}
-                            placeholder="Ex: 🍔"
-                            maxLength={4}
+                            onChange={logo => setForm(f => ({ ...f, logo }))}
                         />
                     </div>
                 </div>
@@ -80,9 +199,7 @@ export function Categories() {
                                 <div className="expense-name">
                                     {cat.name}
                                     {cat.userId === 0 && (
-                                        <span className="badge badge-recurring" style={{ marginLeft: "8px" }}>
-                                            Global
-                                        </span>
+                                        <span className="badge badge-recurring" style={{ marginLeft: "8px" }}>Global</span>
                                     )}
                                 </div>
                                 <div className="expense-meta">

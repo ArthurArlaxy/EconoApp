@@ -29,33 +29,40 @@ export function useCategory() {
         if (!form.name.trim()) {
             setError("Nome é obrigatório")
             return
-        }
-        setSaving(true)
-        setError("")
-        try {
-            await createCategoryApi({ name: form.name, color: form.color, logo: form.logo })
-            setForm(EMPTY_FORM)
-            await fetchCategories()
-        } catch (err) {
-            setError(err.message)
-        } finally {
-            setSaving(false)
-        }
+        } else if (!form.color) {
+            setError("Cor é obrigatório")
+            return
+        } else if (!form.logo) {
+        setError("ícone é obrigatório")
+        return
     }
 
-    async function handleDelete(id) {
-        if (!confirm("Tem certeza que deseja excluir esta categoria?")) return
-        try {
-            await deleteCategoryApi(id)
-            await fetchCategories()
-        } catch (err) {
-            setError(err.message)
-        }
+    setSaving(true)
+    setError("")
+    try {
+        await createCategoryApi({ name: form.name, color: form.color, logo: form.logo })
+        setForm(EMPTY_FORM)
+        await fetchCategories()
+    } catch (err) {
+        setError(err.message)
+    } finally {
+        setSaving(false)
     }
+}
 
-    return {
-        categories, loading, saving, error,
-        form, setForm,
-        handleCreate, handleDelete
+async function handleDelete(id) {
+    if (!confirm("Tem certeza que deseja excluir esta categoria?")) return
+    try {
+        await deleteCategoryApi(id)
+        await fetchCategories()
+    } catch (err) {
+        setError(err.message)
     }
+}
+
+return {
+    categories, loading, saving, error,
+    form, setForm,
+    handleCreate, handleDelete
+}
 }
