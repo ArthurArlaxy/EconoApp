@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react"
 import { useCategory } from "../hooks/useCategory"
+import { ConfirmModal } from "../components/ConfirmModal"
 
 const EMOJI_CATEGORIES = [
     { label: "🍔", name: "Comida", emojis: ["🍔", "🍕", "🍣", "🍜", "🍱", "🥗", "🌮", "🥪", "🍰", "☕", "🧃", "🍺", "🥤", "🍷", "🧁"] },
@@ -33,7 +34,6 @@ function EmojiPicker({ value, onChange }) {
         return () => document.removeEventListener("mousedown", handleClick)
     }, [])
 
-    // bloqueia scroll do body no mobile quando aberto
     useEffect(() => {
         if (isMobile) {
             document.body.style.overflow = open ? "hidden" : ""
@@ -64,14 +64,8 @@ function EmojiPicker({ value, onChange }) {
 
             {open && (
                 <>
-                    {/* overlay escuro no mobile */}
-                    <div
-                        className="emoji-overlay"
-                        onClick={() => setOpen(false)}
-                    />
-
+                    <div className="emoji-overlay" onClick={() => setOpen(false)} />
                     <div className="emoji-picker-dropdown">
-                        {/* header mobile */}
                         <div className="emoji-picker-header">
                             <span style={{ fontSize: "13px", fontWeight: 600, color: "var(--text-primary)" }}>
                                 {EMOJI_CATEGORIES[activeTab].name}
@@ -86,8 +80,6 @@ function EmojiPicker({ value, onChange }) {
                                 </button>
                             )}
                         </div>
-
-                        {/* abas com scroll horizontal drag */}
                         <div className="emoji-tabs">
                             {EMOJI_CATEGORIES.map((cat, i) => (
                                 <button
@@ -101,8 +93,6 @@ function EmojiPicker({ value, onChange }) {
                                 </button>
                             ))}
                         </div>
-
-                        {/* grid */}
                         <div className="emoji-grid">
                             {EMOJI_CATEGORIES[activeTab].emojis.map(emoji => (
                                 <button
@@ -123,7 +113,7 @@ function EmojiPicker({ value, onChange }) {
 }
 
 export function Categories() {
-    const { categories, loading, saving, error, form, setForm, handleCreate, handleDelete } = useCategory()
+    const { categories, loading, saving, error, form, setForm, handleCreate, confirmId, setConfirmId, confirmDelete } = useCategory()
 
     return (
         <div className="expenses-page">
@@ -210,7 +200,7 @@ export function Categories() {
                                 <button
                                     className="btn-danger"
                                     style={{ padding: "8px 16px", fontSize: "13px" }}
-                                    onClick={() => handleDelete(cat.id)}
+                                    onClick={() => setConfirmId(cat.id)} // ← abre o modal
                                 >
                                     Excluir
                                 </button>
@@ -219,6 +209,17 @@ export function Categories() {
                     ))}
                 </div>
             )}
+
+            {/* ===== MODAL DE CONFIRMAÇÃO ===== */}
+            <ConfirmModal
+                isOpen={!!confirmId}
+                title="Excluir categoria"
+                message="Tem certeza que deseja excluir esta categoria? As despesas vinculadas não serão excluídas."
+                confirmLabel="Excluir"
+                cancelLabel="Cancelar"
+                onConfirm={confirmDelete}
+                onCancel={() => setConfirmId(null)}
+            />
         </div>
     )
 }

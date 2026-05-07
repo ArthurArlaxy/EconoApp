@@ -10,7 +10,8 @@ export function useEditExpense() {
     const [categories, setCategories] = useState([])
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
-    const [deleting, setDeleting] = useState(false) 
+    const [deleting, setDeleting] = useState(false)
+    const [confirmOpen, setConfirmOpen] = useState(false) // ← novo
     const [error, setError] = useState("")
 
     useEffect(() => {
@@ -43,7 +44,7 @@ export function useEditExpense() {
                 name: form.name,
                 value: Number(form.value),
                 dueDate: form.dueDate,
-                description: form.description || undefined, // ← null vira undefined
+                description: form.description || undefined,
                 isPaid: form.isPaid,
                 isRecurring: form.isRecurring,
                 installments: form.installments ? Number(form.installments) : undefined,
@@ -57,8 +58,8 @@ export function useEditExpense() {
         }
     }
 
-    async function handleDelete() {
-        if (!confirm("Tem certeza que deseja excluir esta despesa?")) return 
+    async function confirmDelete() {
+        setConfirmOpen(false)
         setDeleting(true)
         try {
             await deleteExpenseApi(id)
@@ -70,5 +71,9 @@ export function useEditExpense() {
         }
     }
 
-    return { form, setForm, categories, loading, saving, deleting, error, handleSave, handleDelete }
+    return {
+        form, setForm, categories, loading, saving, deleting, error,
+        confirmOpen, setConfirmOpen, confirmDelete,
+        handleSave
+    }
 }

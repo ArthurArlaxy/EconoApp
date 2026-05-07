@@ -1,6 +1,7 @@
 import { Handler } from "express";
 import { UserService } from "../Service/UserService";
 import { createUserSchema, loginUserSchema, updateUserSchema, userQuerySchema } from "../Schema/UserSchema";
+import { HttpError } from "../Error/HttpError";
 
 export class UserController {
   constructor(private userService: UserService) { }
@@ -9,7 +10,7 @@ export class UserController {
     try {
       const data = createUserSchema.parse(req.body);
       const user = await this.userService.createUser(data);
-      
+
       res.cookie("token", user, {
         httpOnly: true,
         secure: false,
@@ -18,7 +19,7 @@ export class UserController {
       })
 
       return res.status(201).json({ message: "Register sucessfuly" })
-    
+
     } catch (error) {
       next(error);
     }
@@ -47,7 +48,10 @@ export class UserController {
 
   getUserById: Handler = async (req, res, next) => {
     try {
-      const id = Number(req.params.id);
+
+      if (!req.user) throw new HttpError("Invalid token", 401)
+
+      const id = Number((req.user as any).id);
       const user = await this.userService.getUserById(id);
       res.json(user);
     } catch (error) {
@@ -67,7 +71,9 @@ export class UserController {
 
   updateUser: Handler = async (req, res, next) => {
     try {
-      const id = Number(req.params.id);
+      if (!req.user) throw new HttpError("Invalid token", 401)
+
+      const id = Number((req.user as any).id);
       const data = updateUserSchema.parse(req.body);
       const user = await this.userService.updateUser(id, data);
       res.json(user);
@@ -78,7 +84,9 @@ export class UserController {
 
   deleteUser: Handler = async (req, res, next) => {
     try {
-      const id = Number(req.params.id);
+      if (!req.user) throw new HttpError("Invalid token", 401)
+
+      const id = Number((req.user as any).id);
       const user = await this.userService.deleteUser(id);
       res.json({ message: "Usuário deletado com sucesso", user });
     } catch (error) {

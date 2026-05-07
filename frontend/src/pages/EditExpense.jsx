@@ -1,9 +1,10 @@
 import { useNavigate } from "react-router-dom"
 import { useEditExpense } from "../hooks/useEditExpense"
+import { ConfirmModal } from "../components/ConfirmModal"
 
 export function EditExpense() {
     const navigate = useNavigate()
-    const { form, setForm, categories, loading, saving, deleting, error, handleSave, handleDelete } = useEditExpense()
+    const { form, setForm, categories, loading, saving, deleting, error, handleSave, confirmOpen, setConfirmOpen, confirmDelete } = useEditExpense()
 
     if (loading) return <p style={{ textAlign: "center", color: "var(--text-secondary)", padding: "2rem" }}>Carregando...</p>
     if (!form) return null
@@ -70,7 +71,7 @@ export function EditExpense() {
                     <button
                         type="button"
                         className="btn-danger"
-                        onClick={handleDelete}
+                        onClick={() => setConfirmOpen(true)}
                         disabled={deleting}
                     >
                         {deleting ? "Excluindo..." : "Excluir"}
@@ -94,6 +95,16 @@ export function EditExpense() {
                     </div>
                 </div>
             </form>
+
+            <ConfirmModal
+                isOpen={confirmOpen}
+                title="Excluir despesa"
+                message="Tem certeza que deseja excluir esta despesa? Essa ação não pode ser desfeita."
+                confirmLabel="Excluir"
+                cancelLabel="Cancelar"
+                onConfirm={confirmDelete}
+                onCancel={() => setConfirmOpen(false)}
+            />
         </main>
     )
 }
