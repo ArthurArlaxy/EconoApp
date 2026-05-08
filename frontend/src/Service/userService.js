@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000/api"
+const API_URL = import.meta.env.VITE_API_URL
 
 export async function getUserApi() {
     const response = await fetch(`${API_URL}/users`, {
@@ -28,5 +28,16 @@ export async function deleteUserApi() {
     })
     const data = await response.json()
     if (!response.ok) throw new Error(data.message || "Erro ao deletar usuário")
+    return data
+}
+
+export async function logoutUserApi() {
+    const response = await fetch(`${API_URL}/logout`, {
+        method:"POST",
+        credentials:"include"
+    })
+
+    const data = await response.json()
+    if(!response.ok) throw new Error("Erro ao deslogar")
     return data
 }

@@ -46,6 +46,21 @@ export class UserController {
     }
   }
 
+  logout: Handler = async (req, res, next) => {
+
+    try {
+
+      if (!req.user) throw new HttpError("Invalid token", 401)
+
+      res.clearCookie("token")
+      res.json({ message: "Logout realizado com sucesso" })
+
+    } catch (error) {
+      throw new HttpError("Internal error", 500)
+    }
+
+  }
+
   getUserById: Handler = async (req, res, next) => {
     try {
 

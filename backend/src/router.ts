@@ -32,6 +32,7 @@ const categoryController = new CategoryController(categoryService);
 // Login Routes
 router.post("/register", userController.register);
 router.post("/login", userController.login);
+router.post("/logout", authMiddleware.auth, userController.logout)
 
 // User Routes
 router.get("/users", authMiddleware.auth, userController.getUserById);

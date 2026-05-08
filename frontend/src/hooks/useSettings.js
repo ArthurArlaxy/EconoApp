@@ -1,47 +1,38 @@
 import { useState, useEffect } from "react"
-import { getUserApi, updateUserApi, deleteUserApi } from "../service/userService"
 import { useNavigate } from "react-router-dom"
+import { updateUserApi, deleteUserApi, logoutUserApi } from "../service/userService"
+import { useAuth } from "../context/AuthContext"
 
 export function useSettings() {
     const navigate = useNavigate()
-    const [user, setUser] = useState(null)
-    const [loading, setLoading] = useState(true)
+    const { user, setUser } = useAuth() // ← pega o user do contexto
+
     const [saving, setSaving] = useState(false)
     const [deleting, setDeleting] = useState(false)
+    const [loggingOut, setLoggingOut] = useState(false)
     const [error, setError] = useState("")
     const [success, setSuccess] = useState("")
-    const [confirmOpen, setConfirmOpen] = useState(false) // ← novo
-    const [theme, setThemeState] = useState(
-        () => localStorage.getItem("theme") || "dark"
-    )
+    const [confirmOpen, setConfirmOpen] = useState(false)
+    const [theme, setThemeState] = useState(() => localStorage.getItem("theme") || "dark")
     const [form, setForm] = useState({
-        name: "", email: "", password: "", confirmPassword: ""
+        name: user?.name || "",
+        email: user?.email || "",
+        password: "",
+        confirmPassword: ""
     })
 
+    // atualiza o form quando o user do contexto carregar
     useEffect(() => {
-        async function load() {
-            try {
-                const data = await getUserApi()
-                setUser(data)
-                setForm(f => ({ ...f, name: data.name, email: data.email }))
-            } catch (err) {
-                setError(err.message)
-            } finally {
-                setLoading(false)
-            }
+        if (user) {
+            setForm(f => ({ ...f, name: user.name, email: user.email }))
         }
-        load()
-    }, [])
+    }, [user])
 
     function setTheme(t) {
         setThemeState(t)
         localStorage.setItem("theme", t)
         document.documentElement.setAttribute("data-theme", t)
     }
-
-    useEffect(() => {
-        document.documentElement.setAttribute("data-theme", theme)
-    }, [])
 
     async function handleSave() {
         if (form.password && form.password !== form.confirmPassword) {
@@ -57,7 +48,8 @@ export function useSettings() {
                 email: form.email,
                 ...(form.password && { password: form.password })
             }
-            await updateUserApi(payload)
+            const updated = await updateUserApi(payload)
+            setUser(updated) // ← atualiza o contexto global
             setSuccess("Dados atualizados com sucesso!")
             setForm(f => ({ ...f, password: "", confirmPassword: "" }))
         } catch (err) {
@@ -67,11 +59,25 @@ export function useSettings() {
         }
     }
 
+async function handleLogout() {
+    setLoggingOut(true)
+    try {
+        await logoutUserApi()
+        setUser(null) // ← isso dispara o ProtectedRoute a redirecionar
+        navigate("/")
+    } catch (err) {
+        setError(err.message)
+    } finally {
+        setLoggingOut(false)
+    }
+}
+
     async function confirmDelete() {
         setConfirmOpen(false)
         setDeleting(true)
         try {
             await deleteUserApi()
+            setUser(null) // ← limpa o contexto
             navigate("/")
         } catch (err) {
             setError(err.message)
@@ -81,10 +87,10 @@ export function useSettings() {
     }
 
     return {
-        user, loading, saving, deleting, error, success,
+        user, saving, deleting, loggingOut, error, success,
         form, setForm,
         theme, setTheme,
         confirmOpen, setConfirmOpen, confirmDelete,
-        handleSave
+        handleSave, handleLogout
     }
 }

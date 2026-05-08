@@ -11,11 +11,11 @@ const THEMES = [
 export function Settings() {
     const navigate = useNavigate()
     const {
-        user, loading, saving, deleting, error, success,
+        user, loading, saving, deleting, loggingOut, error, success,
         form, setForm,
         theme, setTheme,
         confirmOpen, setConfirmOpen, confirmDelete,
-        handleSave
+        handleSave, handleLogout
     } = useSettings()
 
     if (loading) return <p style={{ textAlign: "center", color: "var(--text-secondary)", padding: "2rem" }}>Carregando...</p>
@@ -42,6 +42,29 @@ export function Settings() {
                             )}
                         </button>
                     ))}
+                </div>
+            </div>
+
+            {/* ===== SESSÃO ===== */}
+            <div className="settings-section">
+                <div className="settings-section-title">Sessão</div>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
+                    <div>
+                        <p style={{ fontSize: "14px", fontWeight: 600, color: "var(--text-primary)" }}>
+                            {user?.name}
+                        </p>
+                        <p style={{ fontSize: "13px", color: "var(--text-secondary)", marginTop: "2px" }}>
+                            {user?.email}
+                        </p>
+                    </div>
+                    <button
+                        type="button"
+                        className="btn-cancel"
+                        onClick={handleLogout}
+                        disabled={loggingOut}
+                    >
+                        {loggingOut ? "Saindo..." : "Sair da conta"}
+                    </button>
                 </div>
             </div>
 
@@ -99,7 +122,7 @@ export function Settings() {
                     <button
                         type="button"
                         className="btn-danger"
-                        onClick={() => setConfirmOpen(true)} // ← abre o modal
+                        onClick={() => setConfirmOpen(true)}
                         disabled={deleting}
                     >
                         {deleting ? "Excluindo..." : "Excluir conta"}
@@ -124,7 +147,6 @@ export function Settings() {
                 </div>
             </div>
 
-            {/* ===== MODAL DE CONFIRMAÇÃO ===== */}
             <ConfirmModal
                 isOpen={confirmOpen}
                 title="Excluir conta"

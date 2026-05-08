@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { login, register} from "../Service/LoginService" // 👈 importe register
+import { login, register } from "../Service/LoginService"
+import { useAuth } from "../context/AuthContext"
 import "../index.css"
 
 export function Login() {
@@ -11,6 +12,7 @@ export function Login() {
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
+    const { setUser } = useAuth() // ← adicione isso
 
     function handleToggle(registering) {
         setIsRegistering(registering)
@@ -31,6 +33,7 @@ export function Login() {
             } else {
                 await login(email, password)
             }
+            setUser({ name, email }) // ← seta o user no contexto com os dados que já tem
             navigate("/app")
         } catch (err) {
             setError(isRegistering ? "Erro ao criar conta" : "Credenciais inválidas")
