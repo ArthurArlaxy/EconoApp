@@ -7,6 +7,8 @@ import { EditExpense } from './pages/EditExpense'
 import { Categories } from './pages/Category'
 import { Settings } from './pages/Settings'
 import { ProtectedRoute } from './components/ProtectedRoute'
+import { Reports } from './pages/Reports'
+
 
 export const router = createBrowserRouter([
     {
@@ -25,7 +27,8 @@ export const router = createBrowserRouter([
             { path: "add-expense", element: <AddExpense /> },
             { path: "expenses/:id", element: <EditExpense /> },
             { path: "categories", element: <Categories /> },
-            { path: "settings", element: <Settings /> }
+            { path: "settings", element: <Settings /> },
+            { path: "reports", element: <Reports /> }
         ]
     }
 ])

@@ -10,6 +10,9 @@ import { UserPrismaRepository } from "./Repository/prisma/UserPrisma";
 import { ExpensePrismaRepository } from "./Repository/prisma/ExpensePrisma";
 import { CategoryPrismaRepository } from "./Repository/prisma/CategoryPrisma";
 import { AuthMiddleware } from "./middleware/AuthMiddleware";
+import { ReportPrisma } from "./Repository/prisma/ReportsPrisma"
+import { ReportService } from "./Service/ReportsService"
+import { ReportsController } from "./Controller/ReportsController"
 
 export const router = Router();
 
@@ -28,6 +31,10 @@ const categoryService = new CategoryService(categoryRepository);
 const userController = new UserController(userService);
 const expenseController = new ExpenseController(expenseService);
 const categoryController = new CategoryController(categoryService);
+
+const reportsRepository = new ReportPrisma(prisma)
+const reportsService = new ReportService(reportsRepository)
+const reportsController = new ReportsController(reportsService)
 
 // Login Routes
 router.post("/register", userController.register);
@@ -56,3 +63,6 @@ router.get("/categories/:id", authMiddleware.auth, categoryController.getCategor
 router.put("/categories/:id", authMiddleware.auth, categoryController.updateCategory);
 router.delete("/categories/:id", authMiddleware.auth, categoryController.deleteCategory);
 router.get("/categories/admin", authMiddleware.auth,authMiddleware.admin, categoryController.getAllCategories);
+
+// Reports Router
+router.get("/reports", authMiddleware.auth, reportsController.getReports)

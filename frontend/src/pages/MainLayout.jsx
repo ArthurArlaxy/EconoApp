@@ -10,7 +10,7 @@ export function MainLayout() {
                     <NavLink className="navBar" to="add-expense" end>Add</NavLink>
                     <NavLink className="navBar" to="categories" end>Categories</NavLink>
                     <NavLink className="navBar" to="settings" end>Settings</NavLink>
-                    <NavLink className="navBar" to="view" end>View</NavLink>
+                    <NavLink className="navBar" to="reports" end>Reports</NavLink>
                 </nav>
             </header>
             <main>

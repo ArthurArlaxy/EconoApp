@@ -1134,6 +1134,21 @@ input[type="number"] {
     text-align: center;
 }
 
+/* ================= REPORTS ================= */
+.reports-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .reports-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* ===================================================
 RESPONSIVO
 =================================================== */
