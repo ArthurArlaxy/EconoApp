@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router-dom"
-import { getExpenseByIdApi, updateExpenseApi, getCategoriesApi, deleteExpenseApi } from "../Service/expenseService"
+import { getExpenseByIdApi, updateExpenseApi, getCategoriesApi, deleteExpenseApi } from "../service/expenseService"
 
 export function useEditExpense() {
     const { id } = useParams()

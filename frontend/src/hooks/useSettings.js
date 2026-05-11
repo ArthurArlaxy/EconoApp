@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { updateUserApi, deleteUserApi, logoutUserApi } from "../Service/userService"
+import { updateUserApi, deleteUserApi, logoutUserApi } from "../service/userService"
 import { useAuth } from "../context/AuthContext"
 
 export function useSettings() {

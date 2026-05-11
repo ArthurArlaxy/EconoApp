@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { getReportsApi } from "../Service/reportsService"
+import { getReportsApi } from "../service/reportsService"
 
 const formatCurrency = (value) => Number(value).toLocaleString("pt-BR", { style: "currency", currency: "BRL" })
 
