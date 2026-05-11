@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getCategoriesApi, addExpenseApi } from "../Service/expenseService"
+import { getCategoriesApi, addExpenseApi } from "../service/expenseService"
 import "../index.css"
 
 export function AddExpense() {
