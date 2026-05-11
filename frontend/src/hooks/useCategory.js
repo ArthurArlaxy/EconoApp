@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
-import { getCategoriesApi, createCategoryApi, deleteCategoryApi } from "../service/categoryService"
+import { getCategoriesApi, createCategoryApi, deleteCategoryApi } from "../Service/categoryService"
 
 const EMPTY_FORM = { name: "", color: "", logo: "" }
 
