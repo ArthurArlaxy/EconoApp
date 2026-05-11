@@ -13,8 +13,8 @@ export class UserController {
 
       res.cookie("token", user, {
         httpOnly: true,
-        secure: false,
-        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         maxAge: 24 * 60 * 60 * 1000
       })
 
@@ -33,8 +33,8 @@ export class UserController {
 
       res.cookie("token", user, {
         httpOnly: true,
-        secure: false,
-        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         maxAge: 24 * 60 * 60 * 1000
       })
 
@@ -52,7 +52,12 @@ export class UserController {
 
       if (!req.user) throw new HttpError("Invalid token", 401)
 
-      res.clearCookie("token")
+      res.clearCookie("token", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      })
+
       res.json({ message: "Logout realizado com sucesso" })
 
     } catch (error) {
