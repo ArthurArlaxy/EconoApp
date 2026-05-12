@@ -198,11 +198,12 @@ export function Categories() {
                             </div>
                             {cat.userId !== 0 && (
                                 <button
-                                    className="btn-danger"
-                                    style={{ padding: "8px 16px", fontSize: "13px" }}
-                                    onClick={() => setConfirmId(cat.id)} // ← abre o modal
+                                    className="btn-delete-category"
+                                    onClick={() => setConfirmId(cat.id)}
+                                    aria-label="Excluir categoria"
                                 >
-                                    Excluir
+                                    <span className="btn-delete-label">Excluir</span>
+                                    <span className="btn-delete-icon">✕</span>
                                 </button>
                             )}
                         </div>

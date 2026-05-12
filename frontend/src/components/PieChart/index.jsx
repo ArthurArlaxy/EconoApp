@@ -37,8 +37,13 @@ export function PieChart({ categoryData, formatCurrency }) {
     }
 
     return (
-        <div style={{ display: "flex", alignItems: "center", gap: "24px", flexWrap: "wrap", justifyContent: "center" }}>
-            <svg width={canvasSize} height={canvasSize} viewBox={`0 0 ${canvasSize} ${canvasSize}`}>
+        <div className="piechart-wrapper">
+            <svg
+                className="piechart-svg"
+                width={canvasSize}
+                height={canvasSize}
+                viewBox={`0 0 ${canvasSize} ${canvasSize}`}
+            >
                 {chartSlices.map((slice, index) => (
                     <path
                         key={index}
@@ -53,12 +58,13 @@ export function PieChart({ categoryData, formatCurrency }) {
                     {formatCurrency(totalValue)}
                 </text>
             </svg>
-            <div style={{ display: "flex", flexDirection: "column", gap: "8px", minWidth: "160px" }}>
+
+            <div className="piechart-legend">
                 {chartSlices.map((slice, index) => (
-                    <div key={index} style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px" }}>
-                        <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: slice.color, flexShrink: 0 }} />
-                        <span style={{ color: "var(--text-secondary)", flex: 1 }}>{slice.logo} {slice.name}</span>
-                        <span style={{ color: "var(--text-primary)", fontWeight: 600 }}>{(slice.percentage * 100).toFixed(1)}%</span>
+                    <div key={index} className="piechart-legend-item">
+                        <div className="piechart-legend-dot" style={{ background: slice.color }} />
+                        <span className="piechart-legend-name">{slice.logo} {slice.name}</span>
+                        <span className="piechart-legend-pct">{(slice.percentage * 100).toFixed(1)}%</span>
                     </div>
                 ))}
             </div>

@@ -49,25 +49,24 @@ export function Reports() {
                     </div>
                 </div>
             </div>
-
             <div className="settings-section">
                 <div className="settings-section-title">Comparativo mensal</div>
-                <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
-                    <div style={{ flex: 1, minWidth: "120px" }}>
-                        <p style={{ fontSize: "12px", color: "var(--text-secondary)", marginBottom: "4px" }}>{currentMonthName}</p>
-                        <p style={{ fontSize: "20px", fontWeight: 700, color: "var(--text-primary)" }}>{formatCurrency(currentMonthTotal)}</p>
+                <div className="comparison-grid">
+                    <div className="comparison-item">
+                        <p className="comparison-label">{currentMonthName}</p>
+                        <p className="comparison-value">{formatCurrency(currentMonthTotal)}</p>
                     </div>
-                    <div style={{ flex: 1, minWidth: "120px" }}>
-                        <p style={{ fontSize: "12px", color: "var(--text-secondary)", marginBottom: "4px" }}>{lastMonthName}</p>
-                        <p style={{ fontSize: "20px", fontWeight: 700, color: "var(--text-primary)" }}>{formatCurrency(lastMonthTotal)}</p>
+                    <div className="comparison-item">
+                        <p className="comparison-label">{lastMonthName}</p>
+                        <p className="comparison-value">{formatCurrency(lastMonthTotal)}</p>
                     </div>
-                    <div style={{ flex: 1, minWidth: "120px" }}>
-                        <p style={{ fontSize: "12px", color: "var(--text-secondary)", marginBottom: "4px" }}>Diferença</p>
-                        <p style={{ fontSize: "20px", fontWeight: 700, color: comparisonColor }}>
+                    <div className="comparison-item">
+                        <p className="comparison-label">Diferença</p>
+                        <p className="comparison-value" style={{ color: comparisonColor }}>
                             {diff > 0 ? "+" : ""}{formatCurrency(diff)}
                         </p>
                         {diffPercent && (
-                            <p style={{ fontSize: "12px", color: comparisonColor, marginTop: "2px" }}>
+                            <p className="comparison-percent" style={{ color: comparisonColor }}>
                                 {comparisonArrow} {Math.abs(Number(diffPercent))}% em relação ao mês anterior
                             </p>
                         )}
@@ -86,7 +85,7 @@ export function Reports() {
                 </div>
             </div>
 
-            <div className="settings-section">
+            <div className="settings-section ">
                 <div className="settings-section-title">Ranking de categorias</div>
                 {byCategory.length === 0 ? (
                     <p style={{ color: "var(--text-secondary)", fontSize: "13px" }}>Sem dados</p>
