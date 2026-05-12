@@ -4,7 +4,7 @@ export const createCategorySchema = z.object({
   name: z.string().min(1, "Nome é obrigatório").max(255),
   logo: z.string().min(1, "Logo é obrigatória"),
   color: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Cor deve ser um hexadecimal válido"),
-  userId: z.number().int().positive(),
+  userId: z.number().int().min(0),
 });
 
 export const updateCategorySchema = z.object({
@@ -14,7 +14,7 @@ export const updateCategorySchema = z.object({
 });
 
 export const getCategorySchema = z.object({
-  id: z.number().int().positive(),
+  id: z.number().int().min(0),
 });
 
 export type CreateCategoryInput = z.infer<typeof createCategorySchema>;
