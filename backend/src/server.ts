@@ -3,6 +3,7 @@ import express from "express"
 import cookieParser from "cookie-parser"
 import { router } from './router';
 import cors from "cors"
+import path from "path"
 
 const app = express()
 
@@ -15,8 +16,14 @@ app.use(express.json())
 app.use(cookieParser()) 
 app.use("/api", router)
 
-const PORT = process.env.PORT || 5000
+// Serve o frontend
+app.use(express.static(path.join(__dirname, '..', '..', 'frontend', 'dist')))
 
+app.get('/{*path}', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', '..', 'frontend', 'dist', 'index.html'))
+})
+
+const PORT = process.env.PORT || 5000
 
 app.listen(PORT, () => {
     console.log(`Servidor Online em http://localhost:${PORT}`)
