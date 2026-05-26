@@ -1,6 +1,4 @@
 
-raw
-Readme · MD
 # 💸 EconoApp
  
 > Aplicação fullstack de controle financeiro pessoal — gerencie despesas, categorias e visualize seus gastos com relatórios e gráficos interativos.
