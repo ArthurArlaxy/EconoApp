@@ -116,6 +116,7 @@ Nenhuma credencial, secret ou string de conexão está hardcoded no código. Tud
 |---|---|
 | `React` | Interface de usuário |
 | `TypeScript` | Tipagem no frontend |
+| `Vite` | Bundler e servidor de desenvolvimento |
  
 ### Infra & Tooling
 | Tecnologia | Uso |
@@ -158,7 +159,7 @@ cd econoapp
 npm install
  
 # Configure as variáveis de ambiente
-cp .env
+cp .env.example .env
 # edite o .env com suas credenciais
  
 # Rode as migrations do banco
